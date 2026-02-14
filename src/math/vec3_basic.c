@@ -1,5 +1,4 @@
-
-#include "structures.h"
+#include "minirt.h"
 
 /*
 ** Inicializa un vector con valores x, y, z.

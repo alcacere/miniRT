@@ -1,4 +1,4 @@
-#include "structures.h"
+#include "minirt.h"
 
 //vec_dot:
 // x1*x2 + y1*y2 + z1*z2;
@@ -8,7 +8,7 @@
 // number, the ligth is behind;
 // the angle formula = A * B = |A|*|B|*cos(0);
 
-double	vec_dot(t_vec3 v1, t_vec3 v2)
+double	vec3_dot(t_vec3 v1, t_vec3 v2)
 {
 	return (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z);
 }
