@@ -1,7 +1,8 @@
 NAME        = miniRT
 
 CC          = cc
-CFLAGS      = -Wall -Wextra -Werror -lm -I./include
+CFLAGS      = -Wall -Wextra -Werror -lm -I./include -I./libft/include
+LIBFT		= ./libft/libft.a
 
 SRCS        = src/core/main.c \
               src/math/vec3_basic.c \
@@ -10,10 +11,13 @@ SRCS        = src/core/main.c \
 
 OBJS        = $(SRCS:.c=.o)
 
-all: $(NAME)
+all: $(NAME) $(LIBFT)
 
-$(NAME): $(OBJS)
+$(NAME): $(OBJS) $(LIBFT)
 	$(CC) $(CFLAGS) $(OBJS) -lm -o $(NAME)
+
+$(LIBFT) :
+	@make ./libft
 
 clean:
 	rm -f $(OBJS)
