@@ -36,8 +36,8 @@ static void	*render_worker(void *arg)
 				while (++s[0] < ctx->cam->sqrt_spp)
 				{
 					r = get_ray_stratified(ctx->cam, c, s);
-					pixel_col = vec3_add(pixel_col, \
-						ray_color(&r, ctx->world, ctx->cam->max_depth, ctx->cam->background));
+					pixel_col = vec3_add(pixel_col, 
+						ray_color(&r, ctx->scene, ctx->world));
 				}
 			}
 			pixel_col = vec3_scale(pixel_col, ctx->cam->pixel_samples_scale);
@@ -50,7 +50,7 @@ static void	*render_worker(void *arg)
 }
 
 static void	init_thread_ctx(t_render_ctx *ctx, t_camera *c, 
-	t_hittable *w, int *buf)
+	t_hittable *w, int *buf, t_scene *s)
 {
 	int	i;
 	int	rows_per_thread;
@@ -61,6 +61,7 @@ static void	init_thread_ctx(t_render_ctx *ctx, t_camera *c,
 	{
 		ctx[i].cam = c;
 		ctx[i].world = w;
+		ctx[i].scene = s;
 		ctx[i].image_buffer = buf;
 		ctx[i].start_y = i * rows_per_thread;
 		if (i == THREAD_COUNT - 1)
@@ -71,13 +72,14 @@ static void	init_thread_ctx(t_render_ctx *ctx, t_camera *c,
 	}
 }
 
-void	camera_render_threaded(t_camera *cam, t_hittable *world, int *buffer)
+void	camera_render_threaded(t_camera *cam, t_hittable *world,
+	 int *buffer, t_scene *s)
 {
 	pthread_t		threads[THREAD_COUNT];
 	t_render_ctx	ctx[THREAD_COUNT];
 	int				i;
 
-	init_thread_ctx(ctx, cam, world, buffer);
+	init_thread_ctx(ctx, cam, world, buffer, s);
 	i = 0;
 	while (i < THREAD_COUNT)
 	{
