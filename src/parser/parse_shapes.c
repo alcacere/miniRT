@@ -1,76 +1,66 @@
-#include "minirt.h"
+#include "parse.h"
+#include <stdlib.h>
 
-// init base material; the choosen default texture is a mate with the given
-// color;
-static t_material	get_base_mat(t_color color)
+static t_object	*create_base_object(t_obj_type type, t_color color)
 {
-	t_material	mat;
-
-	mat.color = color;
-	mat.difuse = 1.0;
-	mat.specular = 0.0;
-	mat.shininess = 0.0;
-	mat.is_checkerboard = 0;
-	return (mat);
-}
-
-static void	parse_sphere(char **tokens, t_scene *scene)
-{
-	t_point3	center;
-	double		radius;
-	t_material	mat;
-	t_object	obj;
-
-	if (!tokens[1] || !tokens[2] || !tokens[3])
-		return ;
-	center = parse_vec3(tokens[1]);
-	radius = ft_atof(tokens[2]) / 2.0;
-	mat = get_base_mat(parse_color(tokens[3]));
-	obj = obj_new_sphere(center, radius, mat);
-	obj_add_back(&scene->objects, obj);
-}
-
-static void	parse_plane(t_point **tokens, t_scene *scene)
-{
-	t_point3	point;
-	t_normal	normal;
-	t_material	mat;
 	t_object	*obj;
 
-	if (!tokens[1] || !tokens[2] || !tokens[3])
-		return ;
-	point = parse_vec3(tokens[1]);
-	normal = parse_vec3(tokens[2]);
-	mat = get_base_mat(parse_color(tokens[3]));
-	obj = obj_new_plane(point, normal, mat);
-	obj_add_back(&scene->objects, obj);
+	obj = malloc(sizeof(t_object));
+	if (!obj)
+		return (NULL);
+	obj->type = type;
+	obj->material.color = color;
+	obj->material.diffuse = 1.0;
+	obj->material.specular = 0.0;
+	obj->shape = NULL;
+	obj->next = NULL;
+	return (obj);
 }
 
-static void	parse_cylinder(char **tokens, t_scene *scene)
+int	parse_sphere(char **tokens, t_scene *scene)
 {
-	t_point3	center;
-	t_normal	axis;
-	double		dims[2];
-	t_material	mat;
 	t_object	*obj;
+	t_sphere	*sp;
+	t_color		color;
 
-	if (!tokens[1] || !tokens[2] || !tokens[3] || !tokens[4] || !tokens[5])
-		return ;
-	center = parse_vec3(tokens[1]);
-	axis = tokens[2];
-	dims[0] = ft_atof(tokens[3]);
-	dims[1] = ft_atof(tokens[4]);
-	mat = get_base_mat(tokens[5]);
-	obj = obj_new_cylinder(center, axis, dims, mat);
-	obj_add_back(&scane->objects, obj);
+	if (!tokens[1] || !tokens[2] || !tokens[3] || tokens[4])
+		return (0);
+	if (!parse_color(tokens[3], &color))
+		return (0);
+	obj = create_base_object(OBJ_SPHERE, color);
+	sp = malloc(sizeof(t_sphere));
+	if (!obj || !sp || !parse_vec3(tokens[1], &sp->center))
+	{
+		free(obj);
+		free(sp);
+		return (0);
+	}
+	sp->radius = ft_atof(tokens[2]) / 2.0;
+	obj->shape = sp;
+	object_add_back(&scene->objects, obj);
+	return (1);
 }
 
-void	parse_shape(char **tokens, t_scene *scene)
+int	parse_plane(char **tokens, t_scene *scene)
 {
-	if (ft_strncmp(tokens[0], "sp", 3) == 0)
-		parse_sphere(tokens, scene);
-	else if (ft_strncmp(tokens[0], "pl", 3) == 0)
-		parse_sphere(tokens, scene);
-	else if (ft_strncmp(tokens[0], "cy", 3) == 0)
-		parse_cylinder(tokens, scene);
+	t_object	*obj;
+	t_plane		*pl;
+	t_color		color;
+
+	if (!tokens[1] || !tokens[2] || !tokens[3] || tokens[4])
+		return (0);
+	if (!parse_color(tokens[3], &color))
+		return (0);
+	obj = create_base_object(OBJ_PLANE, color);
+	pl = malloc(sizeof(t_plane));
+	if (!obj || !pl || !parse_vec3(tokens[1], &pl->point) || \
+		!parse_vec3(tokens[2], &pl->normal) || !is_normalized(pl->normal))
+	{
+		free(obj);
+		free(pl);
+		return (0);
+	}
+	obj->shape = pl;
+	object_add_back(&scene->objects, obj);
+	return (1);
 }

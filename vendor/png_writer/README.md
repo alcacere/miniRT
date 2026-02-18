@@ -1,0 +1,1 @@
+it's a PNG codec, it both parses/decodes PNGs and generates/encodes PNGS /include
