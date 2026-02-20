@@ -1,4 +1,5 @@
 #include "light.h"
+#include "texture.h"
 #include <math.h>
 
 static t_color	calc_ambient(t_scene *scene, t_color obj_color)
@@ -29,25 +30,30 @@ static t_color	calc_point_light(t_light *l, t_hit_record *rec, t_ray *cam_r)
 	return (result);
 }
 
-t_color	calculate_lighting(t_scene *scene, t_hittable *world, \
+t_color	calculate_lighting(t_scene *scene, t_hittable *world,
 							t_hit_record *rec, t_ray *cam_ray)
 {
 	t_color	final_color;
 	t_color	light_contrib;
+	t_color	albedo;
 	t_light	*current_light;
 
-	final_color = calc_ambient(scene, rec->mat->color);
+	albedo = rec->mat->color;
+	if (rec->mat->is_checkerboard)
+		albedo = apply_checkerboard(rec->p, albedo);
+	final_color = calc_ambient(scene, albedo);
 	current_light = scene->lights;
 	while (current_light)
 	{
 		if (!is_in_shadow(world, rec->p, current_light))
 		{
 			light_contrib = calc_point_light(current_light, rec, cam_ray);
-			light_contrib = vec3_mul(light_contrib, rec->mat->color);
+			light_contrib = vec3_mul(light_contrib, albedo);
 			final_color = vec3_add(final_color, light_contrib);
 		}
 		current_light = current_light->next;
 	}
+	
 	final_color.x = fmin(final_color.x, 1.0);
 	final_color.y = fmin(final_color.y, 1.0);
 	final_color.z = fmin(final_color.z, 1.0);

@@ -12,6 +12,7 @@ static t_object	*create_base_object(t_obj_type type, t_color color)
 	obj->material.color = color;
 	obj->material.diffuse = 1.0;
 	obj->material.specular = 0.0;
+	obj->material.is_checkerboard = 0;
 	obj->shape = NULL;
 	obj->next = NULL;
 	return (obj);
@@ -23,17 +24,20 @@ int	parse_sphere(char **tokens, t_scene *scene)
 	t_sphere	*sp;
 	t_color		color;
 
-	if (!tokens[1] || !tokens[2] || !tokens[3] || tokens[4])
+	if (!tokens[1] || !tokens[2] || !tokens[3])
 		return (0);
 	if (!parse_color(tokens[3], &color))
 		return (0);
 	obj = create_base_object(OBJ_SPHERE, color);
 	sp = malloc(sizeof(t_sphere));
 	if (!obj || !sp || !parse_vec3(tokens[1], &sp->center))
+		return (free(obj), free(sp), 0);
+	if (tokens[4])
 	{
-		free(obj);
-		free(sp);
-		return (0);
+		if (ft_strncmp(tokens[4], "checker", 8) == 0)
+			obj->material.is_checkerboard = 1;
+		else
+			return (free(obj), free(sp), 0);
 	}
 	sp->radius = ft_atof(tokens[2]) / 2.0;
 	obj->shape = sp;
@@ -47,7 +51,7 @@ int	parse_plane(char **tokens, t_scene *scene)
 	t_plane		*pl;
 	t_color		color;
 
-	if (!tokens[1] || !tokens[2] || !tokens[3] || tokens[4])
+	if (!tokens[1] || !tokens[2] || !tokens[3])
 		return (0);
 	if (!parse_color(tokens[3], &color))
 		return (0);
@@ -55,12 +59,45 @@ int	parse_plane(char **tokens, t_scene *scene)
 	pl = malloc(sizeof(t_plane));
 	if (!obj || !pl || !parse_vec3(tokens[1], &pl->point) || \
 		!parse_vec3(tokens[2], &pl->normal) || !is_normalized(pl->normal))
+		return (free(obj), free(pl), 0);
+	if (tokens[4])
 	{
-		free(obj);
-		free(pl);
-		return (0);
+		if (ft_strncmp(tokens[4], "checker", 8) == 0)
+			obj->material.is_checkerboard = 1;
+		else
+			return (free(obj), free(pl), 0);
 	}
 	obj->shape = pl;
+	object_add_back(&scene->objects, obj);
+	return (1);
+}
+
+int	parse_cylinder(char **tokens, t_scene *scene)
+{
+	t_object	*obj;
+	t_cylinder	*cy;
+	t_color		color;
+
+	if (!tokens[1] || !tokens[2] || !tokens[3] || !tokens[4] || !tokens[5])
+		return (0);
+	if (!parse_color(tokens[5], &color))
+		return (0);
+	obj = create_base_object(OBJ_CYLINDER, color);
+	cy = malloc(sizeof(t_cylinder));
+	if (!obj || !cy || !parse_vec3(tokens[1], &cy->center) || \
+		!parse_vec3(tokens[2], &cy->axis))
+		return (free(obj), free(cy), 0);
+	if (tokens[6])
+	{
+		if (ft_strncmp(tokens[6], "checker", 8) == 0)
+			obj->material.is_checkerboard = 1;
+		else
+			return (free(obj), free(cy), 0);
+	}
+	cy->axis = vec3_normalize(cy->axis);
+	cy->radius = ft_atof(tokens[3]) / 2.0;
+	cy->height = ft_atof(tokens[4]);
+	obj->shape = cy;
 	object_add_back(&scene->objects, obj);
 	return (1);
 }

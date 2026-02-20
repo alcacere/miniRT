@@ -31,14 +31,6 @@ void	free_scene(t_scene *scene)
 {
 	if (!scene)
 		return ;
-	if (scene->objects)
-	{
-		object_free(scene->objects);
-		scene->objects = NULL;
-	}
-	if (scene->lights)
-	{
-		light_free(scene->lights);
-		scene->lights = NULL;
-	}
+	object_free(scene->objects);
+	light_free(scene->lights);
 }

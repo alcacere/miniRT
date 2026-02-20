@@ -9,19 +9,11 @@ int	close_window(t_minirt *rt)
 	exit(0);
 	return (0);
 }
+
 int	key_hook(int keycode, t_minirt *rt)
 {
 	if (keycode == KEY_ESC)
 		close_window(rt);
-	else if (keycode == KEY_P)
-	{
-		ft_putendl_fd("Guardando render de alta calidad en 'render.png'...", 1);
-		if (export_frame_to_png(&rt->img, rt->scene.camera.image_width, \
-								rt->scene.camera.image_height, "render.png"))
-			ft_putendl_fd("¡Éxito! Imagen guardada correctamente.", 1);
-		else
-			ft_putendl_fd("Error: Falló la codificación PNG.", 2);
-	}
 	return (0);
 }
 
@@ -35,6 +27,7 @@ void	init_graphics(t_minirt *rt, t_img *img)
 	rt->mlx = mlx_init();
 	if (!rt->mlx)
 	{
+		ft_putendl_fd("Error\nFallo crítico: No se pudo conectar al servidor X11 (Verifica tu DISPLAY o WSL).", 2);
 		free_scene(&rt->scene);
 		exit(1);
 	}
@@ -45,6 +38,6 @@ void	init_graphics(t_minirt *rt, t_img *img)
 		exit(1);
 	}
 	img->img = mlx_new_image(rt->mlx, w, h);
-	img->addr = mlx_get_data_addr(img->img, &img->bpp, 
-		&img->line_len, &img->endian);
+	img->addr = mlx_get_data_addr(img->img, &img->bpp, \
+									&img->line_len, &img->endian);
 }

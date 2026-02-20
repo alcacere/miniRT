@@ -7,43 +7,24 @@
 
 # define THREAD_COUNT 8
 
-typedef struct s_camera
-{
-	double		aspect_ratio;
-	double		samples_per_pixel;
-	double		pixel_samples_scale;
-	int			image_width;
-	int			image_height;
-	int			max_depth;
-	double		vfov;
-	t_point3	lookfrom;
-	t_point3	lookat;
-	t_vec3		vup;
-	double		defocus_angle;
-	double		focus_dist;
-	t_color		background;
-	t_point3	center;
-	t_point3	pixel00_loc;
-	t_vec3		pixel_delta_u;
-	t_vec3		pixel_delta_v;
-	t_vec3		u;
-	t_vec3		v;
-	t_vec3		w;
-	t_vec3		defocus_disk_u;
-	t_vec3		defocus_disk_v;
-	int			sqrt_spp;
-	double		recip_sqrt_spp;
-}	t_camera;
+#ifndef M_PI
+#define M_PI    3.14159265358979323846264338327950288
+#endif
 
 typedef struct s_render_ctx
 {
 	t_camera	*cam;
 	t_hittable	*world;
-	int			*image_buffer;// (0xRRGGBB)
+	t_scene		*scene;
+	int			*image_buffer;
 	int			start_y;
 	int			end_y;
 }	t_render_ctx;
 
-void	camera_render_threaded(t_camera *cam, t_hittable *world, int *buffer);
+void	camera_render_threaded(t_camera *cam, t_hittable *world,
+	 int *buffer, t_scene *s);
+t_ray	get_ray_stratified(t_camera *c, int coords[2], int s_coords[2]);
+t_vec3	ray_color(t_ray *r, t_scene *scene, t_hittable *world);
+void	init_camera(t_camera *c);
 
 #endif

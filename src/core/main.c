@@ -38,6 +38,7 @@ int	main(int argc, char **argv)
 		ft_putendl_fd("Error\nArchivo de escena inválido o malformado", 2);
 		return (1);
 	}
+	init_camera(&rt.scene.camera);
 	setup_and_render(&rt, &img);
 	mlx_hook(rt.win, 2, 1L << 0, key_hook, &rt);
 	mlx_hook(rt.win, 17, 0, close_window, &rt);

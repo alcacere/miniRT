@@ -1,51 +1,70 @@
 NAME        = miniRT
 
 CC          = cc
-CFLAGS      = -Wall -Wextra -Werror -I./include -I./libft/include
-
-LIBFT_DIR   = ./libft
-LIBFT       = $(LIBFT_DIR)/libft.a
+CFLAGS      = -Wall -Wextra -Werror -O3
 
 SRC_DIR     = src
 OBJ_DIR     = obj
+INC_DIR     = include
+LIBFT_DIR   = libft
 
-CORE_DIR    = core
-MATH_DIR    = math
-PARSER_DIR  = parser
-OBJ_MOD_DIR = objects
+CORE_DIR    = $(SRC_DIR)/core
+MATH_DIR    = $(SRC_DIR)/math
+OBJTS_DIR   = $(SRC_DIR)/objects
+PARSE_DIR   = $(SRC_DIR)/parser
 
-CORE_SRC    = main_parse_test.c
-MATH_SRC    = vec3_basic.c vec3_algebra.c matrix_ops.c
-PARSER_SRC  = parse_utils.c parse_scene.c parse_elements.c parse_shapes.c
-OBJ_MOD_SRC = scene_builders.c scene_list.c
+CORE_SRC    = graphics.c light_utils.c ligth.c main.c texture.c \
+              memory.c camera_ray.c render.c list_utils.c camera_init.c
 
-SRCS        = $(addprefix $(SRC_DIR)/$(CORE_DIR)/, $(CORE_SRC)) \
-              $(addprefix $(SRC_DIR)/$(MATH_DIR)/, $(MATH_SRC)) \
-              $(addprefix $(SRC_DIR)/$(PARSER_DIR)/, $(PARSER_SRC)) \
-              $(addprefix $(SRC_DIR)/$(OBJ_MOD_DIR)/, $(OBJ_MOD_SRC))
+MATH_SRC    = atof.c vec3_basic.c vec3_adv.c ray_utils.c
+OBJTS_SRC   = hittable_list.c world.c plane.c sphere.c cylinder.c
+PARSE_SRC   = parse_shapes.c parser.c parse_utils.c parse_env.c
 
-OBJS        = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
+SRCS        = $(addprefix $(CORE_DIR)/, $(CORE_SRC)) \
+              $(addprefix $(MATH_DIR)/, $(MATH_SRC)) \
+              $(addprefix $(OBJTS_DIR)/, $(OBJTS_SRC)) \
+              $(addprefix $(PARSE_DIR)/, $(PARSE_SRC))
+
+OBJS        = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+
+LIBFT       = $(LIBFT_DIR)/libft.a
+
+MLX_DIR     = ./minilibx-linux/
+MLX_FLAGS   = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
+MLX_LIB     = $(MLX_DIR)/libmlx.a
 
 
-all: $(LIBFT) $(NAME)
+INCLUDES    = -I $(INC_DIR) -I $(LIBFT_DIR)/include -I $(MLX_DIR)
 
-$(LIBFT):
-	@$(MAKE) -C $(LIBFT_DIR)
+all: $(NAME)
 
-$(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJS) -L$(LIBFT_DIR) -lft -lm -o $(NAME)
+$(NAME): $(LIBFT) $(MLX_LIB) $(OBJS)
+	@echo "Ensamblando $(NAME)..."
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLX_FLAGS) -lpthread -lm -o $(NAME)
+	@echo "¡Motor miniRT compilado exitosamente!"
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(LIBFT):
+	@echo "Compilando Libft..."
+	@make -C $(LIBFT_DIR)
+
+$(MLX_LIB):
+	@echo "Compilando MinilibX..."
+	@make -C $(MLX_DIR) 2> /dev/null
 
 clean:
-	@$(MAKE) -C $(LIBFT_DIR) clean
-	rm -rf $(OBJ_DIR)
+	@echo "Limpiando archivos objeto..."
+	@rm -rf $(OBJ_DIR)
+	@make -C $(LIBFT_DIR) clean
+	@make -C $(MLX_DIR) clean > /dev/null 2>&1 || true
 
 fclean: clean
-	@$(MAKE) -C $(LIBFT_DIR) fclean
-	rm -f $(NAME)
+	@echo "Eliminando ejecutable..."
+	@rm -f $(NAME)
+	@make -C $(LIBFT_DIR) fclean
 
 re: fclean all
 
