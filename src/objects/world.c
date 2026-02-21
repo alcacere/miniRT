@@ -22,6 +22,8 @@ static t_hittable	*create_wrapper(t_object *node)
 		return (create_hittable_plane(node));
 	else if (node->type == OBJ_CYLINDER)
 		return (create_hittable_cylinder(node));
+	if (node->type == OBJ_TRIANGLE)
+		return (create_hittable_triangle(node));
 	return (NULL);
 }
 
@@ -34,7 +36,7 @@ t_hittable	*build_world(t_object *objects)
 	world = malloc(sizeof(t_hittable));
 	list = malloc(sizeof(t_hittable_list));
 	if (!world || !list)
-		return (NULL); // Deberíamos liberar si uno falla en un entorno total
+		return (NULL);
 	list->count = count_objects(objects);
 	list->elements = malloc(sizeof(t_hittable *) * list->count);
 	if (!list->elements)

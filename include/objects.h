@@ -18,5 +18,6 @@ int			hit_list(const void *obj, const t_ray *r, \
 t_hittable	*create_hittable_sphere(t_object *obj);
 t_hittable	*create_hittable_plane(t_object *obj);
 t_hittable	*create_hittable_cylinder(t_object *obj);
+t_hittable *create_hittable_triangle(t_object *obj);
 
 #endif

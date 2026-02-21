@@ -102,3 +102,24 @@ int	parse_cylinder(char **tokens, t_scene *scene)
 	object_add_back(&scene->objects, obj);
 	return (1);
 }
+
+int	parse_triangle(char **tokens, t_scene *scene)
+{
+	t_object	*obj;
+	t_triangle	*tr;
+	t_color		color;
+
+	if (!tokens[1] || !tokens[2] || !tokens[3] || !tokens[4])
+		return (0);
+	if (!parse_color(tokens[4], &color))
+		return (0);
+	obj = create_base_object(OBJ_TRIANGLE, color);
+	tr = malloc(sizeof(t_triangle));
+	if (!obj || !tr || !parse_vec3(tokens[1], &tr->a) || \
+		!parse_vec3(tokens[2], &tr->b) || !parse_vec3(tokens[3], &tr->c))
+		return (free(obj), free(tr), 0);
+	apply_material(obj, tokens[5]);
+	obj->shape = tr;
+	object_add_back(&scene->objects, obj);
+	return (1);
+}

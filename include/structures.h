@@ -58,8 +58,16 @@ typedef enum e_obj_type
 {
 	OBJ_SPHERE,
 	OBJ_PLANE,
-	OBJ_CYLINDER
+	OBJ_CYLINDER,
+	OBJ_TRIANGLE
 }	t_obj_type;
+
+typedef struct s_triangle
+{
+	t_point3	a;
+	t_point3	b;
+	t_point3	c;
+}	t_triangle;
 
 typedef struct s_sphere
 {
