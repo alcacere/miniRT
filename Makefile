@@ -1,7 +1,7 @@
 NAME        = miniRT
 
 CC          = cc
-CFLAGS      = -Wall -Wextra -Werror -O3
+CFLAGS      = -Wall -Wextra -Werror 
 
 SRC_DIR     = src
 OBJ_DIR     = obj
@@ -13,10 +13,10 @@ MATH_DIR    = $(SRC_DIR)/math
 OBJTS_DIR   = $(SRC_DIR)/objects
 PARSE_DIR   = $(SRC_DIR)/parser
 
-CORE_SRC    = graphics.c light_utils.c ligth.c main.c texture.c \
-              memory.c camera_ray.c render.c list_utils.c camera_init.c
-
-MATH_SRC    = atof.c vec3_basic.c vec3_adv.c ray_utils.c
+CORE_SRC    = graphics.c main.c texture.c \
+              memory.c camera_ray.c render.c list_utils.c camera_init.c \
+              scatter.c
+MATH_SRC    = atof.c vec3_basic.c vec3_adv.c ray_utils.c random.c physics.c
 OBJTS_SRC   = hittable_list.c world.c plane.c sphere.c cylinder.c
 PARSE_SRC   = parse_shapes.c parser.c parse_utils.c parse_env.c
 
@@ -40,12 +40,12 @@ all: $(NAME)
 
 $(NAME): $(LIBFT) $(MLX_LIB) $(OBJS)
 	@echo "Ensamblando $(NAME)..."
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLX_FLAGS) -lpthread -lm -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLX_FLAGS) -lpthread -lm -o $(NAME)
 	@echo "¡Motor miniRT compilado exitosamente!"
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(LIBFT):
 	@echo "Compilando Libft..."

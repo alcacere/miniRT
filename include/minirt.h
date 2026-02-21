@@ -3,6 +3,7 @@
 
 # include "libft.h"
 # include "structures.h"
+# include <stdint.h>
 
 # ifndef INFINITY
 #  define INFINITY (1e30)
@@ -31,5 +32,17 @@ void		light_free(t_light *head);
 struct s_hit_record;
 void		set_face_normal(struct s_hit_record *hit, const t_ray *r, \
 							const t_vec3 *outward_normal);
+
+
+double	random_double(uint32_t *seed);
+double	random_double_range(uint32_t *seed, double min, double max);
+t_vec3	random_vec3(uint32_t *seed);
+t_vec3	random_vec3_range(uint32_t *seed, double min, double max);
+t_vec3	random_in_unit_sphere(uint32_t *seed);
+t_vec3	random_unit_vector(uint32_t *seed);
+
+t_vec3	reflect(t_vec3 v, t_vec3 n);
+t_vec3	refract(t_vec3 uv, t_vec3 n, double etai_over_etat);
+double	reflectance(double cosine, double ref_idx);
 
 #endif

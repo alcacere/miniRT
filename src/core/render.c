@@ -18,8 +18,9 @@ static void	*render_worker(void *arg)
 	t_render_ctx	*ctx;
 	int				c[2];
 	int				s[2];
-	t_color			pixel_col;
+	t_color			color;
 	t_ray			r;
+	uint32_t		seed;
 
 	ctx = (t_render_ctx *)arg;
 	c[1] = ctx->start_y;
@@ -28,7 +29,8 @@ static void	*render_worker(void *arg)
 		c[0] = 0;
 		while (c[0] < ctx->cam->image_width)
 		{
-			pixel_col = vec3_create(0, 0, 0);
+			color = vec3_create(0, 0, 0);
+			seed = (uint32_t)(c[1] * 73856093 ^ c[0] * 19349663);
 			s[1] = -1;
 			while (++s[1] < ctx->cam->sqrt_spp)
 			{
@@ -36,12 +38,12 @@ static void	*render_worker(void *arg)
 				while (++s[0] < ctx->cam->sqrt_spp)
 				{
 					r = get_ray_stratified(ctx->cam, c, s);
-					pixel_col = vec3_add(pixel_col, 
-						ray_color(&r, ctx->scene, ctx->world));
+					color = vec3_add(color, ray_color(&r, ctx->scene, ctx->world, \
+											ctx->cam->max_depth, &seed));
 				}
 			}
-			pixel_col = vec3_scale(pixel_col, ctx->cam->pixel_samples_scale);
-			ctx->image_buffer[c[1] * ctx->cam->image_width + c[0]] = rgb_to_int(pixel_col);
+			color = vec3_scale(color, ctx->cam->pixel_samples_scale);
+			ctx->image_buffer[c[1] * ctx->cam->image_width + c[0]] = rgb_to_int(color);
 			c[0]++;
 		}
 		c[1]++;

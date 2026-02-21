@@ -1,6 +1,24 @@
 #include "parse.h"
 #include <stdlib.h>
 
+static void	apply_material(t_object *obj, char *token)
+{
+	if (!token)
+		return ;
+	if (ft_strncmp(token, "checker", 8) == 0)
+		obj->material.is_checkerboard = 1;
+	else if (ft_strncmp(token, "metal", 6) == 0)
+	{
+		obj->material.type = MAT_METAL;
+		obj->material.fuzz = 0.05;
+	}
+	else if (ft_strncmp(token, "glass", 6) == 0)
+	{
+		obj->material.type = MAT_DIELECTRIC;
+		obj->material.ir = 1.5;
+	}
+}
+
 static t_object	*create_base_object(t_obj_type type, t_color color)
 {
 	t_object	*obj;
@@ -10,8 +28,9 @@ static t_object	*create_base_object(t_obj_type type, t_color color)
 		return (NULL);
 	obj->type = type;
 	obj->material.color = color;
-	obj->material.diffuse = 1.0;
-	obj->material.specular = 0.0;
+	obj->material.type = MAT_LAMBERTIAN;
+	obj->material.fuzz = 0.0;
+	obj->material.ir = 1.5;
 	obj->material.is_checkerboard = 0;
 	obj->shape = NULL;
 	obj->next = NULL;
@@ -32,13 +51,7 @@ int	parse_sphere(char **tokens, t_scene *scene)
 	sp = malloc(sizeof(t_sphere));
 	if (!obj || !sp || !parse_vec3(tokens[1], &sp->center))
 		return (free(obj), free(sp), 0);
-	if (tokens[4])
-	{
-		if (ft_strncmp(tokens[4], "checker", 8) == 0)
-			obj->material.is_checkerboard = 1;
-		else
-			return (free(obj), free(sp), 0);
-	}
+	apply_material(obj, tokens[4]);
 	sp->radius = ft_atof(tokens[2]) / 2.0;
 	obj->shape = sp;
 	object_add_back(&scene->objects, obj);
@@ -60,13 +73,7 @@ int	parse_plane(char **tokens, t_scene *scene)
 	if (!obj || !pl || !parse_vec3(tokens[1], &pl->point) || \
 		!parse_vec3(tokens[2], &pl->normal) || !is_normalized(pl->normal))
 		return (free(obj), free(pl), 0);
-	if (tokens[4])
-	{
-		if (ft_strncmp(tokens[4], "checker", 8) == 0)
-			obj->material.is_checkerboard = 1;
-		else
-			return (free(obj), free(pl), 0);
-	}
+	apply_material(obj, tokens[4]);
 	obj->shape = pl;
 	object_add_back(&scene->objects, obj);
 	return (1);
@@ -87,13 +94,7 @@ int	parse_cylinder(char **tokens, t_scene *scene)
 	if (!obj || !cy || !parse_vec3(tokens[1], &cy->center) || \
 		!parse_vec3(tokens[2], &cy->axis))
 		return (free(obj), free(cy), 0);
-	if (tokens[6])
-	{
-		if (ft_strncmp(tokens[6], "checker", 8) == 0)
-			obj->material.is_checkerboard = 1;
-		else
-			return (free(obj), free(cy), 0);
-	}
+	apply_material(obj, tokens[6]);
 	cy->axis = vec3_normalize(cy->axis);
 	cy->radius = ft_atof(tokens[3]) / 2.0;
 	cy->height = ft_atof(tokens[4]);

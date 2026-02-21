@@ -23,13 +23,21 @@ typedef struct s_interval
 	double	max;
 }	t_interval;
 
+
+typedef enum e_mat_type
+{
+	MAT_LAMBERTIAN,
+	MAT_METAL,
+	MAT_DIELECTRIC
+}	t_mat_type;
+
 typedef struct s_material
 {
-	t_color	color;
-	double	diffuse;
-	double	specular;
-	double	shininess;
-	int		is_checkerboard;
+	t_mat_type	type;
+	t_color		color;
+	double		fuzz;
+	double		ir;
+	int			is_checkerboard;
 }	t_material;
 
 typedef struct s_ambient
