@@ -27,14 +27,20 @@ int	hit_plane(const void *obj, const t_ray *r, \
 	return (1);
 }
 
+
 t_hittable	*create_hittable_plane(t_object *obj)
 {
-	t_hittable	*h_pl;
+	t_hittable	*node;
+	t_vec3		huge;
 
-	h_pl = malloc(sizeof(t_hittable));
-	if (!h_pl)
+	node = malloc(sizeof(t_hittable));
+	if (!node)
 		return (NULL);
-	h_pl->object = obj;
-	h_pl->hit = hit_plane;
-	return (h_pl);
+	node->object = obj;
+	node->hit = hit_plane;
+	huge = vec3_create(1e5, 1e5, 1e5);
+	node->bbox.min = vec3_scale(huge, -1.0);
+	node->bbox.max = huge;
+	aabb_pad(&node->bbox);
+	return (node);
 }

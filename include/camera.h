@@ -5,7 +5,7 @@
 # include "hittable.h"
 # include <pthread.h>
 
-# define THREAD_COUNT 8
+# define THREAD_COUNT 16
 
 #ifndef M_PI
 #define M_PI    3.14159265358979323846264338327950288

@@ -32,20 +32,19 @@ t_vec3	ray_color(t_ray *r, t_scene *scene, t_hittable *world, \
 	t_hit_record	rec;
 	t_ray			scattered;
 	t_color			attenuation;
-	t_vec3			unit_dir;
-	double			a;
 
 	if (depth <= 0)
 		return (vec3_create(0, 0, 0));
+		
 	if (world->hit(world->object, r, interval_create(0.001, INFINITY), &rec))
 	{
+		if (rec.mat->type == MAT_EMISSION)
+			return (vec3_scale(rec.mat->color, rec.mat->emit_strength));
+			
 		if (scatter(r, &rec, &attenuation, &scattered, seed))
 			return (vec3_mul(attenuation, \
 					ray_color(&scattered, scene, world, depth - 1, seed)));
 		return (vec3_create(0, 0, 0));
 	}
-	unit_dir = vec3_normalize(r->direction);
-	a = 0.5 * (unit_dir.y + 1.0);
-	return (vec3_add(vec3_scale(vec3_create(1.0, 1.0, 1.0), 1.0 - a), \
-					vec3_scale(scene->camera.background, a)));
+	return (vec3_scale(scene->ambient.color, scene->ambient.ratio));
 }

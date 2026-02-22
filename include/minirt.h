@@ -3,6 +3,7 @@
 
 # include "libft.h"
 # include "structures.h"
+# include <math.h>
 # include <stdint.h>
 
 # ifndef INFINITY
@@ -44,5 +45,9 @@ t_vec3	random_unit_vector(uint32_t *seed);
 t_vec3	reflect(t_vec3 v, t_vec3 n);
 t_vec3	refract(t_vec3 uv, t_vec3 n, double etai_over_etat);
 double	reflectance(double cosine, double ref_idx);
+
+int		hit_aabb(const t_aabb *box, const t_ray *r, t_interval rayt);
+t_aabb	aabb_merge(t_aabb box0, t_aabb box1);
+void aabb_pad(t_aabb *box);
 
 #endif

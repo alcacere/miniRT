@@ -55,12 +55,20 @@ int	hit_cylinder(const void *obj, const t_ray *r,
 
 t_hittable	*create_hittable_cylinder(t_object *obj)
 {
-	t_hittable	*h_cy;
+	t_hittable	*node;
+	t_cylinder	*cy;
+	t_vec3		ext;
+	double		max_d;
 
-	h_cy = malloc(sizeof(t_hittable));
-	if (!h_cy)
+	node = malloc(sizeof(t_hittable));
+	if (!node)
 		return (NULL);
-	h_cy->object = obj;
-	h_cy->hit = hit_cylinder;
-	return (h_cy);
+	cy = (t_cylinder *)obj->shape;
+	node->object = obj;
+	node->hit = hit_cylinder;
+	max_d = sqrt(cy->radius * cy->radius + (cy->height / 2.0) * (cy->height / 2.0));
+	ext = vec3_create(max_d, max_d, max_d);
+	node->bbox.min = vec3_sub(cy->center, ext);
+	node->bbox.max = vec3_add(cy->center, ext);
+	return (node);
 }

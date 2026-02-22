@@ -27,7 +27,7 @@ void	init_graphics(t_minirt *rt, t_img *img)
 	rt->mlx = mlx_init();
 	if (!rt->mlx)
 	{
-		ft_putendl_fd("Error\nFallo crítico: No se pudo conectar al servidor X11 (Verifica tu DISPLAY o WSL).", 2);
+		ft_putendl_fd("Error\n).", 2);
 		free_scene(&rt->scene);
 		exit(1);
 	}

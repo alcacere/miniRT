@@ -1,9 +1,6 @@
 #include "parse.h"
 #include "libft.h"
 
-/* * Parseo directo: Extraemos R, G, B saltando las comas.
- * Cero uso de malloc, cero ft_split, cero fugas de memoria.
- */
 int	parse_color(char *str, t_color *color)
 {
 	int	r;
@@ -31,7 +28,6 @@ int	parse_color(char *str, t_color *color)
 	return (is_valid_color(*color));
 }
 
-/* * Parseo directo de vectores X, Y, Z. */
 int	parse_vec3(char *str, t_vec3 *vec)
 {
 	if (!str)

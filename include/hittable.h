@@ -25,6 +25,7 @@ typedef struct s_hittable
 {
 	void		*object;
 	t_hit_fn	hit;
+	t_aabb		bbox;
 }	t_hittable;
 
 #endif

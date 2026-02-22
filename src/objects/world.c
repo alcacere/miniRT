@@ -1,26 +1,15 @@
 #include "objects.h"
 #include <stdlib.h>
 
-static int	count_objects(t_object *head)
-{
-	int	count;
-
-	count = 0;
-	while (head)
-	{
-		count++;
-		head = head->next;
-	}
-	return (count);
-}
+t_hittable	*build_bvh(t_hittable **list, int n, uint32_t *seed);
 
 static t_hittable	*create_wrapper(t_object *node)
 {
 	if (node->type == OBJ_SPHERE)
 		return (create_hittable_sphere(node));
-	else if (node->type == OBJ_PLANE)
+	if (node->type == OBJ_PLANE)
 		return (create_hittable_plane(node));
-	else if (node->type == OBJ_CYLINDER)
+	if (node->type == OBJ_CYLINDER)
 		return (create_hittable_cylinder(node));
 	if (node->type == OBJ_TRIANGLE)
 		return (create_hittable_triangle(node));
@@ -29,26 +18,29 @@ static t_hittable	*create_wrapper(t_object *node)
 
 t_hittable	*build_world(t_object *objects)
 {
-	t_hittable		*world;
-	t_hittable_list	*list;
-	int				i;
+	t_hittable	**arr;
+	int			count;
+	int			i;
+	t_object	*tmp;
+	t_hittable	*bvh_root;
+	uint32_t	seed;
 
-	world = malloc(sizeof(t_hittable));
-	list = malloc(sizeof(t_hittable_list));
-	if (!world || !list)
+	count = 0;
+	tmp = objects;
+	while (tmp && ++count)
+		tmp = tmp->next;
+	if (count == 0)
 		return (NULL);
-	list->count = count_objects(objects);
-	list->elements = malloc(sizeof(t_hittable *) * list->count);
-	if (!list->elements)
-		return (NULL);
+	arr = malloc(sizeof(t_hittable *) * count);
+	tmp = objects;
 	i = 0;
-	while (objects)
+	while (tmp)
 	{
-		list->elements[i] = create_wrapper(objects);
-		objects = objects->next;
-		i++;
+		arr[i++] = create_wrapper(tmp);
+		tmp = tmp->next;
 	}
-	world->object = list;
-	world->hit = hit_list;
-	return (world);
+	seed = 4242;
+	bvh_root = build_bvh(arr, count, &seed);
+	free(arr);
+	return (bvh_root);
 }

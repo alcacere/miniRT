@@ -48,14 +48,18 @@ int	hit_sphere(const void *obj, const t_ray *r, \
 
 t_hittable	*create_hittable_sphere(t_object *obj)
 {
-	t_hittable	*h_sp;
+	t_hittable	*node;
+	t_sphere	*sp;
+	t_vec3		rvec;
 
-	h_sp = malloc(sizeof(t_hittable));
-	if (!h_sp)
+	node = malloc(sizeof(t_hittable));
+	if (!node)
 		return (NULL);
-	
-	h_sp->object = obj; 
-	h_sp->hit = hit_sphere;
-	
-	return (h_sp);
+	sp = (t_sphere *)obj->shape;
+	node->object = obj;
+	node->hit = hit_sphere;
+	rvec = vec3_create(sp->radius, sp->radius, sp->radius);
+	node->bbox.min = vec3_sub(sp->center, rvec);
+	node->bbox.max = vec3_add(sp->center, rvec);
+	return (node);
 }

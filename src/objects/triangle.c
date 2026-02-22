@@ -1,4 +1,5 @@
 #include "objects.h"
+#include "minirt.h"
 #include <stdlib.h>
 
 typedef struct s_mt_data
@@ -54,11 +55,20 @@ int	hit_triangle(const void *object, const t_ray *r, t_interval rayt, \
 t_hittable	*create_hittable_triangle(t_object *obj)
 {
 	t_hittable	*node;
+	t_triangle	*tr;
 
 	node = malloc(sizeof(t_hittable));
 	if (!node)
 		return (NULL);
+	tr = (t_triangle *)obj->shape;
 	node->object = obj;
 	node->hit = hit_triangle;
+	node->bbox.min.x = fmin(tr->a.x, fmin(tr->b.x, tr->c.x));
+	node->bbox.min.y = fmin(tr->a.y, fmin(tr->b.y, tr->c.y));
+	node->bbox.min.z = fmin(tr->a.z, fmin(tr->b.z, tr->c.z));
+	node->bbox.max.x = fmax(tr->a.x, fmax(tr->b.x, tr->c.x));
+	node->bbox.max.y = fmax(tr->a.y, fmax(tr->b.y, tr->c.y));
+	node->bbox.max.z = fmax(tr->a.z, fmax(tr->b.z, tr->c.z));
+	aabb_pad(&node->bbox);
 	return (node);
 }

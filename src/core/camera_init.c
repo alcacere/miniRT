@@ -27,10 +27,10 @@ void	init_camera(t_camera *c)
 	t_vec3	vp_v;
 	t_vec3	vp_ul;
 
-	c->image_width = 800;
+	c->image_width = 1200;
 	c->aspect_ratio = 16.0 / 9.0;
 	c->image_height = (int)(c->image_width / c->aspect_ratio);
-	c->sqrt_spp = 4;
+	c->sqrt_spp = 20;
 	c->recip_sqrt_spp = 1.0 / c->sqrt_spp;
 	c->pixel_samples_scale = 1.0 / (c->sqrt_spp * c->sqrt_spp);
 	c->max_depth = 10;

@@ -15,6 +15,7 @@ typedef struct s_ray
 {
 	t_point3	origin;
 	t_vec3		direction;
+	t_vec3		inv_dir;
 }	t_ray;
 
 typedef struct s_interval
@@ -23,12 +24,25 @@ typedef struct s_interval
 	double	max;
 }	t_interval;
 
+typedef struct s_aabb
+{
+	t_point3	min;
+	t_point3	max;
+}	t_aabb;
+
+typedef struct s_bvh_node
+{
+	struct s_hittable	*left;
+	struct s_hittable	*right;
+	t_aabb				bbox;
+}	t_bvh_node;
 
 typedef enum e_mat_type
 {
 	MAT_LAMBERTIAN,
 	MAT_METAL,
-	MAT_DIELECTRIC
+	MAT_DIELECTRIC,
+	MAT_EMISSION
 }	t_mat_type;
 
 typedef struct s_material
@@ -38,6 +52,7 @@ typedef struct s_material
 	double		fuzz;
 	double		ir;
 	int			is_checkerboard;
+	double		emit_strength;
 }	t_material;
 
 typedef struct s_ambient
@@ -100,7 +115,6 @@ typedef struct s_object
 typedef struct s_camera
 {
 	double		aspect_ratio;
-	double		samples_per_pixel;
 	double		pixel_samples_scale;
 	int			image_width;
 	int			image_height;

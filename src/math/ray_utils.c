@@ -16,6 +16,9 @@ t_ray	ray_create(t_point3 origin, t_vec3 direction, double tm)
 
 	r.origin = origin;
 	r.direction = direction;
+	r.inv_dir.x = 1.0 / direction.x;
+	r.inv_dir.y = 1.0 / direction.y;
+	r.inv_dir.z = 1.0 / direction.z;
 	(void)tm;
 	return (r);
 }

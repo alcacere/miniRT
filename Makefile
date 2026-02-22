@@ -1,7 +1,7 @@
 NAME        = miniRT
 
 CC          = cc
-CFLAGS      = -Wall -Wextra -Werror 
+CFLAGS      = -Wall -Wextra -Werror -O3
 
 SRC_DIR     = src
 OBJ_DIR     = obj
@@ -17,9 +17,9 @@ CORE_SRC    = graphics.c main.c texture.c \
               memory.c camera_ray.c render.c list_utils.c camera_init.c \
               scatter.c
 
-MATH_SRC    = atof.c vec3_basic.c vec3_adv.c ray_utils.c random.c physics.c
+MATH_SRC    = atof.c vec3_basic.c vec3_adv.c ray_utils.c random.c physics.c aabb.c
 
-OBJTS_SRC   = hittable_list.c world.c plane.c sphere.c cylinder.c triangle.c
+OBJTS_SRC   = world.c plane.c sphere.c cylinder.c triangle.c bvh.c
 
 PARSE_SRC   = parse_shapes.c parser.c parse_utils.c parse_env.c
 
