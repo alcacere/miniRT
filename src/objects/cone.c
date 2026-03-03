@@ -1,5 +1,4 @@
 #include "objects.h"
-#include "structures.h"
 #include <stdlib.h>
 #include <math.h>
 
@@ -12,6 +11,9 @@ typedef struct s_cone_data
 	double	half_b;
 	double	c;
 	double	m;
+	double	disc;
+	double	r1;
+	double	r2;
 }	t_cone_data;
 
 static int	check_cap(t_cone *co, const t_ray *r, t_interval rayt, \
@@ -65,29 +67,36 @@ int	hit_cone(const void *obj, const t_ray *r, t_interval rayt, \
 	t_object	*node;
 	t_cone		*co;
 	t_cone_data	d;
-	t_vec3		oc;
 	int			hit;
 
 	node = (t_object *)obj;
 	co = (t_cone *)node->shape;
 	hit = 0;
 	if (check_cap(co, r, rayt, rec) && (hit = 1))
-		rayt.max = rec->t; 
+		rayt.max = rec->t;
 	d.tip = vec3_add(co->center, vec3_scale(co->axis, co->height));
 	d.axis = vec3_scale(co->axis, -1.0);
 	d.k2 = (co->radius / co->height) * (co->radius / co->height) + 1.0;
-	oc = vec3_sub(r->origin, d.tip);
 	d.a = vec3_dot(r->direction, r->direction) - d.k2 * \
-			vec3_dot(r->direction, d.axis) * vec3_dot(r->direction, d.axis);
-	d.half_b = vec3_dot(r->direction, oc) - d.k2 * \
-				vec3_dot(r->direction, d.axis) * vec3_dot(oc, d.axis);
-	d.c = vec3_dot(oc, oc) - d.k2 * vec3_dot(oc, d.axis) * vec3_dot(oc, d.axis);
-	d.m = d.half_b * d.half_b - d.a * d.c;
-	if (d.m >= 0.0)
+			pow(vec3_dot(r->direction, d.axis), 2);
+	d.half_b = vec3_dot(r->direction, vec3_sub(r->origin, d.tip)) - d.k2 * \
+				vec3_dot(r->direction, d.axis) * vec3_dot(vec3_sub(r->origin, d.tip), d.axis);
+	d.c = vec3_dot(vec3_sub(r->origin, d.tip), vec3_sub(r->origin, d.tip)) - d.k2 * \
+			pow(vec3_dot(vec3_sub(r->origin, d.tip), d.axis), 2);
+	d.disc = d.half_b * d.half_b - d.a * d.c;
+	if (fabs(d.a) > 1e-8 && d.disc >= 0.0)
 	{
-		if (check_root(co, &d, r, rayt, rec, (-d.half_b - sqrt(d.m)) / d.a) && (hit = 1))
+		d.r1 = (-d.half_b - sqrt(d.disc)) / d.a;
+		d.r2 = (-d.half_b + sqrt(d.disc)) / d.a;
+		if (d.r1 > d.r2)
+		{
+			d.m = d.r1;
+			d.r1 = d.r2;
+			d.r2 = d.m;
+		}
+		if (check_root(co, &d, r, rayt, rec, d.r1) && (hit = 1))
 			rayt.max = rec->t;
-		if (check_root(co, &d, r, rayt, rec, (-d.half_b + sqrt(d.m)) / d.a))
+		if (check_root(co, &d, r, rayt, rec, d.r2))
 			hit = 1;
 	}
 	if (hit)
