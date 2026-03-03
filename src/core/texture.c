@@ -1,5 +1,4 @@
 #include "texture.h"
-#include "light.h"
 #include "minirt.h"
 #include <math.h>
 

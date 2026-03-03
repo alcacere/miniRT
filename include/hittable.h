@@ -12,7 +12,6 @@ struct s_hit_record
 	t_vec3		normal;
 	double		t;
 	int			front_face;
-	t_vec3		albedo;
 	double		u;
 	double		v;
 	t_material	*mat;

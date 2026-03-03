@@ -15,22 +15,9 @@ void	object_free(t_object *head)
 	}
 }
 
-void	light_free(t_light *head)
-{
-	t_light	*tmp;
-
-	while (head)
-	{
-		tmp = head->next;
-		free(head);
-		head = tmp;
-	}
-}
-
 void	free_scene(t_scene *scene)
 {
 	if (!scene)
 		return ;
 	object_free(scene->objects);
-	light_free(scene->lights);
 }

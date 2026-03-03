@@ -61,20 +61,13 @@ typedef struct s_ambient
 	t_color	color;
 }	t_ambient;
 
-typedef struct s_light
-{
-	t_point3		position;
-	double			brightness;
-	t_color			color;
-	struct s_light	*next;
-}	t_light;
-
 typedef enum e_obj_type
 {
 	OBJ_SPHERE,
 	OBJ_PLANE,
 	OBJ_CYLINDER,
-	OBJ_TRIANGLE
+	OBJ_TRIANGLE,
+	OBJ_CONE
 }	t_obj_type;
 
 typedef struct s_triangle
@@ -104,6 +97,14 @@ typedef struct s_cylinder
 	double		height;
 }	t_cylinder;
 
+typedef struct s_cone
+{
+	t_point3	center;
+	t_vec3		axis;
+	double		radius;
+	double		height;
+}	t_cone;
+
 typedef struct s_object
 {
 	t_obj_type		type;
@@ -125,7 +126,6 @@ typedef struct s_camera
 	t_vec3		vup;
 	double		defocus_angle;
 	double		focus_dist;
-	t_color		background;
 	t_point3	center;
 	t_point3	pixel00_loc;
 	t_vec3		pixel_delta_u;
@@ -143,7 +143,6 @@ typedef struct s_scene
 {
 	t_ambient	ambient;
 	t_camera	camera;
-	t_light		*lights;
 	t_object	*objects;
 }	t_scene;
 

@@ -1,15 +1,31 @@
 #include "camera.h"
 #include <stdlib.h>
 
-static int	rgb_to_int(t_vec3 color)
+
+#include <math.h>
+
+/* Convierte luz física (HDR) a colores de monitor (SDR) con Gamma 2.0 */
+int	rgb_to_int(t_color color)
 {
 	int	r;
 	int	g;
 	int	b;
 
-	r = (int)(255.999 * color.x);
-	g = (int)(255.999 * color.y);
-	b = (int)(255.999 * color.z);
+	// 1. Corrección Gamma (sqrt) para iluminar tonos medios
+	color.x = sqrt(fabs(color.x));
+	color.y = sqrt(fabs(color.y));
+	color.z = sqrt(fabs(color.z));
+
+	// 2. Clamping (Forzar a que ningún color pase de 1.0)
+	if (color.x > 1.0) color.x = 1.0;
+	if (color.y > 1.0) color.y = 1.0;
+	if (color.z > 1.0) color.z = 1.0;
+
+	// 3. Conversión segura a 8-bits
+	r = (int)(color.x * 255.0);
+	g = (int)(color.y * 255.0);
+	b = (int)(color.z * 255.0);
+	
 	return ((r << 16) | (g << 8) | b);
 }
 

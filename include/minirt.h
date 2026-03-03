@@ -25,10 +25,8 @@ t_ray		ray_create(t_point3 origin, t_vec3 direction, double tm);
 double		ft_atof(const char *str);
 
 void		object_add_back(t_object **head, t_object *node);
-void		ligth_add_back(t_light **head, t_light *node);
 void		free_scene(t_scene *scene);
 void		object_free(t_object *head);
-void		light_free(t_light *head);
 
 struct s_hit_record;
 void		set_face_normal(struct s_hit_record *hit, const t_ray *r, \
