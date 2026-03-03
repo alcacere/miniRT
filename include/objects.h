@@ -19,5 +19,6 @@ t_hittable	*create_hittable_sphere(t_object *obj);
 t_hittable	*create_hittable_plane(t_object *obj);
 t_hittable	*create_hittable_cylinder(t_object *obj);
 t_hittable *create_hittable_triangle(t_object *obj);
+t_hittable *create_hittable_cone(t_object *obj);
 
 #endif

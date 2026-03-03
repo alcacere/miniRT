@@ -13,6 +13,8 @@ static t_hittable	*create_wrapper(t_object *node)
 		return (create_hittable_cylinder(node));
 	if (node->type == OBJ_TRIANGLE)
 		return (create_hittable_triangle(node));
+	if (node->type == OBJ_CONE)
+		return (create_hittable_cone(node));
 	return (NULL);
 }
 

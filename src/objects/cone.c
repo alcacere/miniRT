@@ -14,6 +14,32 @@ typedef struct s_cone_data
 	double	m;
 }	t_cone_data;
 
+static int	check_cap(t_cone *co, const t_ray *r, t_interval rayt, \
+						t_hit_record *rec)
+{
+	double	denom;
+	double	t;
+	t_vec3	oc;
+	t_vec3	p;
+
+	denom = vec3_dot(r->direction, co->axis);
+	if (fabs(denom) < 1e-8)
+		return (0);
+	oc = vec3_sub(co->center, r->origin);
+	t = vec3_dot(oc, co->axis) / denom;
+	if (t <= rayt.min || t >= rayt.max)
+		return (0);
+	p = vec3_add(r->origin, vec3_scale(r->direction, t));
+	oc = vec3_sub(p, co->center);
+	if (vec3_dot(oc, oc) > co->radius * co->radius)
+		return (0);
+	rec->t = t;
+	rec->p = p;
+	oc = vec3_scale(co->axis, -1.0);
+	set_face_normal(rec, r, &oc);
+	return (1);
+}
+
 static int	check_root(t_cone *co, t_cone_data *d, const t_ray *r, \
 						t_interval rayt, t_hit_record *rec, double root)
 {
@@ -40,26 +66,33 @@ int	hit_cone(const void *obj, const t_ray *r, t_interval rayt, \
 	t_cone		*co;
 	t_cone_data	d;
 	t_vec3		oc;
-	double		discriminant;
+	int			hit;
 
 	node = (t_object *)obj;
 	co = (t_cone *)node->shape;
+	hit = 0;
+	if (check_cap(co, r, rayt, rec) && (hit = 1))
+		rayt.max = rec->t; 
 	d.tip = vec3_add(co->center, vec3_scale(co->axis, co->height));
 	d.axis = vec3_scale(co->axis, -1.0);
 	d.k2 = (co->radius / co->height) * (co->radius / co->height) + 1.0;
 	oc = vec3_sub(r->origin, d.tip);
 	d.a = vec3_dot(r->direction, r->direction) - d.k2 * \
-			pow(vec3_dot(r->direction, d.axis), 2);
+			vec3_dot(r->direction, d.axis) * vec3_dot(r->direction, d.axis);
 	d.half_b = vec3_dot(r->direction, oc) - d.k2 * \
 				vec3_dot(r->direction, d.axis) * vec3_dot(oc, d.axis);
-	d.c = vec3_dot(oc, oc) - d.k2 * pow(vec3_dot(oc, d.axis), 2);
-	discriminant = d.half_b * d.half_b - d.a * d.c;
-	if (discriminant < 0.0)
-		return (0);
-	if (check_root(co, &d, r, rayt, rec, (-d.half_b - sqrt(discriminant)) / d.a) || \
-		check_root(co, &d, r, rayt, rec, (-d.half_b + sqrt(discriminant)) / d.a))
-		return (rec->mat = &node->material, 1);
-	return (0);
+	d.c = vec3_dot(oc, oc) - d.k2 * vec3_dot(oc, d.axis) * vec3_dot(oc, d.axis);
+	d.m = d.half_b * d.half_b - d.a * d.c;
+	if (d.m >= 0.0)
+	{
+		if (check_root(co, &d, r, rayt, rec, (-d.half_b - sqrt(d.m)) / d.a) && (hit = 1))
+			rayt.max = rec->t;
+		if (check_root(co, &d, r, rayt, rec, (-d.half_b + sqrt(d.m)) / d.a))
+			hit = 1;
+	}
+	if (hit)
+		rec->mat = &node->material;
+	return (hit);
 }
 
 t_hittable	*create_hittable_cone(t_object *obj)

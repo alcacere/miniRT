@@ -123,3 +123,27 @@ int	parse_triangle(char **tokens, t_scene *scene)
 	object_add_back(&scene->objects, obj);
 	return (1);
 }
+
+int	parse_cone(char **tokens, t_scene *scene)
+{
+	t_object	*obj;
+	t_cone		*co;
+	t_color		color;
+
+	if (!tokens[1] || !tokens[2] || !tokens[3] || !tokens[4] || !tokens[5])
+		return (0);
+	if (!parse_color(tokens[5], &color))
+		return (0);
+	obj = create_base_object(OBJ_CONE, color);
+	co = malloc(sizeof(t_cone));
+	if (!obj || !co || !parse_vec3(tokens[1], &co->center) || \
+		!parse_vec3(tokens[2], &co->axis))
+		return (free(obj), free(co), 0);
+	apply_material(obj, tokens[6]);
+	co->axis = vec3_normalize(co->axis);
+	co->radius = ft_atof(tokens[3]) / 2.0;
+	co->height = ft_atof(tokens[4]);
+	obj->shape = co;
+	object_add_back(&scene->objects, obj);
+	return (1);
+}

@@ -19,7 +19,7 @@ CORE_SRC    = graphics.c main.c texture.c \
 
 MATH_SRC    = atof.c vec3_basic.c vec3_adv.c ray_utils.c random.c physics.c aabb.c
 
-OBJTS_SRC   = world.c plane.c sphere.c cylinder.c triangle.c bvh.c
+OBJTS_SRC   = world.c plane.c sphere.c cylinder.c triangle.c bvh.c cone.c
 
 PARSE_SRC   = parse_shapes.c parser.c parse_utils.c parse_env.c
 

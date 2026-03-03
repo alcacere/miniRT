@@ -21,5 +21,6 @@ int		parse_sphere(char **tokens, t_scene *scene);
 int		parse_plane(char **tokens, t_scene *scene);
 int		parse_cylinder(char **tokens, t_scene *scene);
 int 	parse_triangle(char **tokens, t_scene *scene);
+int parse_cone(char **tokens, t_scene *scene);
 
 #endif

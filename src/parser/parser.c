@@ -21,6 +21,8 @@ static int	route_element(char **tokens, t_scene *scene)
 		return (parse_cylinder(tokens, scene));
 	else if (ft_strcmp(tokens[0], "tr") == 0)
 		return (parse_triangle(tokens, scene));
+	else if (ft_strcmp(tokens[0], "co") == 0)
+		return (parse_cone(tokens, scene));
 	else if (tokens[0][0] == '#')
 		return (1);
 	return (0);
