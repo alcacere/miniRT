@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   camera_init.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alcacere <alcacere@student.42madrid.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/05 22:19:36 by alcacere          #+#    #+#             */
+/*   Updated: 2026/03/05 22:19:48 by alcacere         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "camera.h"
 #include <math.h>
 
@@ -42,6 +54,6 @@ void	init_camera(t_camera *c)
 	vp_ul = vec3_sub(c->center, vec3_scale(c->w, c->focus_dist));
 	vp_ul = vec3_sub(vp_ul, vec3_scale(vp_u, 0.5));
 	vp_ul = vec3_sub(vp_ul, vec3_scale(vp_v, 0.5));
-	c->pixel00_loc = vec3_add(vp_ul, vec3_scale(vec3_add(c->pixel_delta_u, \
-						c->pixel_delta_v), 0.5));
+	c->pixel00_loc = vec3_add(vp_ul, vec3_scale(vec3_add(c->pixel_delta_u,
+					c->pixel_delta_v), 0.5));
 }

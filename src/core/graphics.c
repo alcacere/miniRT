@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   graphics.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alcacere <alcacere@student.42madrid.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/05 22:19:54 by alcacere          #+#    #+#             */
+/*   Updated: 2026/03/05 22:19:56 by alcacere         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "graphics.h"
 #include "mlx.h"
 #include <stdlib.h>
@@ -38,6 +50,6 @@ void	init_graphics(t_minirt *rt, t_img *img)
 		exit(1);
 	}
 	img->img = mlx_new_image(rt->mlx, w, h);
-	img->addr = mlx_get_data_addr(img->img, &img->bpp, \
-									&img->line_len, &img->endian);
+	img->addr = mlx_get_data_addr(img->img, &img->bpp,
+			&img->line_len, &img->endian);
 }

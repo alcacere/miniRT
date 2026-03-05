@@ -11,6 +11,8 @@
 #define M_PI    3.14159265358979323846264338327950288
 #endif
 
+typedef struct s_render_ctx	t_render_ctx;
+
 typedef struct s_render_ctx
 {
 	t_camera	*cam;
@@ -21,14 +23,12 @@ typedef struct s_render_ctx
 	int			end_y;
 }	t_render_ctx;
 
+t_vec3	ray_color(t_ray *r, t_render_ctx *ctx, int depth, uint32_t *seed);
 void	camera_render_threaded(t_camera *cam, t_hittable *world,
 	 int *buffer, t_scene *s);
 t_ray	get_ray_stratified(t_camera *c, int coords[2], int s_coords[2]);
 void	init_camera(t_camera *c);
 t_ray	get_ray_stratified(t_camera *c, int coords[2], int s_coords[2]);
-t_vec3	ray_color(t_ray *r, t_scene *scene, t_hittable *world, \
-					int depth, uint32_t *seed);
-int		scatter(t_ray *r_in, t_hit_record *rec, t_color *attenuation, \
-					t_ray *scattered, uint32_t *seed);
+int		scatter(t_ray rays[2], t_hit_record *rec, t_color *att, uint32_t *seed);
 
 #endif

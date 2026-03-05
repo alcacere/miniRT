@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alcacere <alcacere@student.42madrid.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/05 22:20:24 by alcacere          #+#    #+#             */
+/*   Updated: 2026/03/05 22:20:27 by alcacere         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 #include "parse.h"
 #include "graphics.h"
@@ -18,7 +30,8 @@ static void	setup_and_render(t_minirt *rt, t_img *img)
 		exit(1);
 	}
 	init_graphics(rt, img);
-	camera_render_threaded(&rt->scene.camera, world, (int *)img->addr, &rt->scene);
+	camera_render_threaded(&rt->scene.camera, world,
+		(int *)img->addr, &rt->scene);
 	mlx_put_image_to_window(rt->mlx, rt->win, img->img, 0, 0);
 }
 
@@ -29,13 +42,13 @@ int	main(int argc, char **argv)
 
 	if (argc != 2)
 	{
-		ft_putendl_fd("Error\nUso: ./miniRT <escena.rt>", 2);
+		ft_putendl_fd("Error\nUsage: ./miniRT <scene.rt>", 2);
 		return (1);
 	}
 	ft_bzero(&rt, sizeof(t_minirt));
 	if (!parse_file(argv[1], &rt.scene))
 	{
-		ft_putendl_fd("Error\nArchivo de escena inválido o malformado", 2);
+		ft_putendl_fd("Error\nInvalid .rt file", 2);
 		return (1);
 	}
 	init_camera(&rt.scene.camera);

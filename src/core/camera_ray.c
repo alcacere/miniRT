@@ -1,4 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   camera_ray.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alcacere <alcacere@student.42madrid.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/05 22:19:41 by alcacere          #+#    #+#             */
+/*   Updated: 2026/03/05 22:19:43 by alcacere         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "camera.h"
+#include "graphics.h"
 
 static t_vec3	sample_square(int s_i, int s_j, double recip)
 {
@@ -26,25 +39,27 @@ t_ray	get_ray_stratified(t_camera *c, int coords[2], int s_coords[2])
 	return (ray_create(c->center, ray_dir, 0.0));
 }
 
-t_vec3	ray_color(t_ray *r, t_scene *scene, t_hittable *world, \
-					int depth, uint32_t *seed)
+t_vec3	ray_color(t_ray *r, t_render_ctx *ctx, int depth, uint32_t *seed)
 {
 	t_hit_record	rec;
-	t_ray			scattered;
-	t_color			attenuation;
+	t_ray			rays[2];
+	t_color			att;
+	t_vec3			bounced;
 
 	if (depth <= 0)
 		return (vec3_create(0, 0, 0));
-		
-	if (world->hit(world->object, r, interval_create(0.001, INFINITY), &rec))
+	if (ctx->world->hit(ctx->world->object, r,
+			interval_create(0.001, INFINITY), &rec))
 	{
 		if (rec.mat->type == MAT_EMISSION)
 			return (vec3_scale(rec.mat->color, rec.mat->emit_strength));
-			
-		if (scatter(r, &rec, &attenuation, &scattered, seed))
-			return (vec3_mul(attenuation, \
-					ray_color(&scattered, scene, world, depth - 1, seed)));
+		rays[0] = *r;
+		if (scatter(rays, &rec, &att, seed))
+		{
+			bounced = ray_color(&rays[1], ctx, depth - 1, seed);
+			return (vec3_mul(att, bounced));
+		}
 		return (vec3_create(0, 0, 0));
 	}
-	return (vec3_scale(scene->ambient.color, scene->ambient.ratio));
+	return (vec3_scale(ctx->scene->ambient.color, ctx->scene->ambient.ratio));
 }
