@@ -18,3 +18,19 @@ t_color	apply_checkerboard(t_vec3 hit_point, t_color base_color)
 		return (base_color);
 	return (secondary_color);
 }
+
+#include <math.h>
+
+void	apply_bumpmap(t_vec3 p, t_vec3 *normal)
+{
+	double	scale;
+	double	bumpiness;
+	t_vec3	bump;
+
+	scale = 20.0; 
+	bumpiness = 1.8;
+	bump.x = sin(scale * p.x) * bumpiness;
+	bump.y = sin(scale * p.y) * bumpiness;
+	bump.z = sin(scale * p.z) * bumpiness;
+	*normal = vec3_normalize(vec3_add(*normal, bump));
+}

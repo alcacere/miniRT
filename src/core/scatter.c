@@ -10,6 +10,8 @@ int	scatter(t_ray *r_in, t_hit_record *rec, t_color *attenuation, \
 	double	cos_t;
 	double	sin_t;
 
+	if (rec->mat->is_bumpmap)
+		apply_bumpmap(rec->p, &rec->normal);
 	if (rec->mat->is_checkerboard)
 		*attenuation = apply_checkerboard(rec->p, rec->mat->color);
 	else

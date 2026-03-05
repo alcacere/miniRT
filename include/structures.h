@@ -53,6 +53,7 @@ typedef struct s_material
 	double		ir;
 	int			is_checkerboard;
 	double		emit_strength;
+	int			is_bumpmap;
 }	t_material;
 
 typedef struct s_ambient

@@ -7,6 +7,8 @@ static void	apply_material(t_object *obj, char *token)
 		return ;
 	if (ft_strncmp(token, "checker", 8) == 0)
 		obj->material.is_checkerboard = 1;
+	else if (ft_strncmp(token, "bumpmap", 8) == 0)
+		obj->material.is_bumpmap = 1;
 	else if (ft_strncmp(token, "metal", 6) == 0)
 	{
 		obj->material.type = MAT_METAL;
@@ -32,6 +34,7 @@ static t_object	*create_base_object(t_obj_type type, t_color color)
 	obj->material.fuzz = 0.0;
 	obj->material.ir = 1.5;
 	obj->material.is_checkerboard = 0;
+	obj->material.is_bumpmap = 0;
 	obj->shape = NULL;
 	obj->next = NULL;
 	return (obj);

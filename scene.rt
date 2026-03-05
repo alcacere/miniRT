@@ -1,17 +1,20 @@
 A 0.2 150,150,255
 C 0,2.0,-6.0 0,-0.1,1.0 70
-L 0.0,5.0,1.0 0.8 255,255,255
+L -5.0,5.0,1.0 0.8 255,255,255
+L 5.0,5.0,1.0 0.8 255,255,255
 
 # Suelo de ajedrez infinito
 pl 0.0,-1.0,0.0 0.0,1.0,0.0 200,200,200
+#
+## Esfera de Espejo a la izquierda
+#sp 0,0.0,0.0 2.0 125,125,125 glass
+#
+## Cilindro Mate al fondo a la derecha
+#cy 2.5,0.0,1.5 0.0,1.0,0.0 1.5 2.0 50,255,100
+#
+#co -3.0,-1.0,0.0 0.0,1.0,0.0 2.0 3.0 255,100,200 metal
 
-# Esfera de Espejo a la izquierda
-sp 0,0.0,0.0 2.0 125,125,125 glass
-
-# Cilindro Mate al fondo a la derecha
-cy 2.5,0.0,1.5 0.0,1.0,0.0 1.5 2.0 50,255,100
-
-co -3.0,-1.0,0.0 0.0,1.0,0.0 2.0 3.0 255,100,200 metal
+sp 0.0,0.0,2.0 2.0 200,100,50 bumpmap
 
 # Pirámide de Cristal en el centro
 #tr -1.0,-1.0,-1.5 1.0,-1.0,-1.5 0.0,1.0,-1.0 255,255,255 metal
