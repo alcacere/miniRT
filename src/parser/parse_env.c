@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_env.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alcacere <alcacere@student.42madrid.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/05 19:25:26 by alcacere          #+#    #+#             */
+/*   Updated: 2026/03/05 19:25:30 by alcacere         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parse.h"
 #include <stdlib.h>
 
@@ -46,14 +58,14 @@ int	parse_light(char **tokens, t_scene *scene)
 		return (0);
 	obj = malloc(sizeof(t_object));
 	sp = malloc(sizeof(t_sphere));
-	if (!obj || !sp || !parse_vec3(tokens[1], &sp->center) || \
-		!parse_color(tokens[3], &obj->material.color))
+	if (!obj || !sp || !parse_vec3(tokens[1], &sp->center)
+		|| !parse_color(tokens[3], &obj->material.color))
 		return (free(obj), free(sp), 0);
 	obj->type = OBJ_SPHERE;
 	obj->material.type = MAT_EMISSION;
 	obj->material.emit_strength = brightness * 20.0;
 	obj->material.is_checkerboard = 0;
-	sp->radius = 1.0; 
+	sp->radius = 1.0;
 	obj->shape = sp;
 	obj->next = NULL;
 	object_add_back(&scene->objects, obj);

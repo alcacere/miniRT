@@ -22,5 +22,9 @@ int		parse_plane(char **tokens, t_scene *scene);
 int		parse_cylinder(char **tokens, t_scene *scene);
 int 	parse_triangle(char **tokens, t_scene *scene);
 int parse_cone(char **tokens, t_scene *scene);
+void		apply_material(t_object *obj, char *token);
+t_object	*create_base_object(t_obj_type type, t_color color);
+int			parse_triangle(char **tokens, t_scene *scene);
+int			parse_cone(char **tokens, t_scene *scene);
 
 #endif

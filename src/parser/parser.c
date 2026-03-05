@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alcacere <alcacere@student.42madrid.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/05 19:26:03 by alcacere          #+#    #+#             */
+/*   Updated: 2026/03/05 19:26:04 by alcacere         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parse.h"
 #include "libft.h"
 #include <fcntl.h>
@@ -41,7 +53,6 @@ int	parse_line(char *line, t_scene *scene)
 		ft_free_arr(tokens);
 		return (1);
 	}
-	
 	status = route_element(tokens, scene);
 	ft_free_arr(tokens);
 	return (status);

@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_shapes.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alcacere <alcacere@student.42madrid.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/05 19:25:35 by alcacere          #+#    #+#             */
+/*   Updated: 2026/03/05 19:25:38 by alcacere         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parse.h"
 #include <stdlib.h>
 
-static void	apply_material(t_object *obj, char *token)
+void	apply_material(t_object *obj, char *token)
 {
 	if (!token)
 		return ;
@@ -21,7 +33,7 @@ static void	apply_material(t_object *obj, char *token)
 	}
 }
 
-static t_object	*create_base_object(t_obj_type type, t_color color)
+t_object	*create_base_object(t_obj_type type, t_color color)
 {
 	t_object	*obj;
 
@@ -73,8 +85,9 @@ int	parse_plane(char **tokens, t_scene *scene)
 		return (0);
 	obj = create_base_object(OBJ_PLANE, color);
 	pl = malloc(sizeof(t_plane));
-	if (!obj || !pl || !parse_vec3(tokens[1], &pl->point) || \
-		!parse_vec3(tokens[2], &pl->normal) || !is_normalized(pl->normal))
+	if (!obj || !pl || !parse_vec3(tokens[1], &pl->point))
+		return (free(obj), free(pl), 0);
+	if (!parse_vec3(tokens[2], &pl->normal) || !is_normalized(pl->normal))
 		return (free(obj), free(pl), 0);
 	apply_material(obj, tokens[4]);
 	obj->shape = pl;
@@ -94,59 +107,15 @@ int	parse_cylinder(char **tokens, t_scene *scene)
 		return (0);
 	obj = create_base_object(OBJ_CYLINDER, color);
 	cy = malloc(sizeof(t_cylinder));
-	if (!obj || !cy || !parse_vec3(tokens[1], &cy->center) || \
-		!parse_vec3(tokens[2], &cy->axis))
+	if (!obj || !cy || !parse_vec3(tokens[1], &cy->center))
+		return (free(obj), free(cy), 0);
+	if (!parse_vec3(tokens[2], &cy->axis))
 		return (free(obj), free(cy), 0);
 	apply_material(obj, tokens[6]);
 	cy->axis = vec3_normalize(cy->axis);
 	cy->radius = ft_atof(tokens[3]) / 2.0;
 	cy->height = ft_atof(tokens[4]);
 	obj->shape = cy;
-	object_add_back(&scene->objects, obj);
-	return (1);
-}
-
-int	parse_triangle(char **tokens, t_scene *scene)
-{
-	t_object	*obj;
-	t_triangle	*tr;
-	t_color		color;
-
-	if (!tokens[1] || !tokens[2] || !tokens[3] || !tokens[4])
-		return (0);
-	if (!parse_color(tokens[4], &color))
-		return (0);
-	obj = create_base_object(OBJ_TRIANGLE, color);
-	tr = malloc(sizeof(t_triangle));
-	if (!obj || !tr || !parse_vec3(tokens[1], &tr->a) || \
-		!parse_vec3(tokens[2], &tr->b) || !parse_vec3(tokens[3], &tr->c))
-		return (free(obj), free(tr), 0);
-	apply_material(obj, tokens[5]);
-	obj->shape = tr;
-	object_add_back(&scene->objects, obj);
-	return (1);
-}
-
-int	parse_cone(char **tokens, t_scene *scene)
-{
-	t_object	*obj;
-	t_cone		*co;
-	t_color		color;
-
-	if (!tokens[1] || !tokens[2] || !tokens[3] || !tokens[4] || !tokens[5])
-		return (0);
-	if (!parse_color(tokens[5], &color))
-		return (0);
-	obj = create_base_object(OBJ_CONE, color);
-	co = malloc(sizeof(t_cone));
-	if (!obj || !co || !parse_vec3(tokens[1], &co->center) || \
-		!parse_vec3(tokens[2], &co->axis))
-		return (free(obj), free(co), 0);
-	apply_material(obj, tokens[6]);
-	co->axis = vec3_normalize(co->axis);
-	co->radius = ft_atof(tokens[3]) / 2.0;
-	co->height = ft_atof(tokens[4]);
-	obj->shape = co;
 	object_add_back(&scene->objects, obj);
 	return (1);
 }
