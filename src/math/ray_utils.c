@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ray_utils.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alcacere <alcacere@student.42madrid.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/05 22:40:52 by alcacere          #+#    #+#             */
+/*   Updated: 2026/03/05 22:41:30 by alcacere         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 #include "hittable.h"
 
@@ -23,8 +35,8 @@ t_ray	ray_create(t_point3 origin, t_vec3 direction, double tm)
 	return (r);
 }
 
-void	set_face_normal(t_hit_record *hit, const t_ray *r, \
-						const t_vec3 *outward_normal)
+void	set_face_normal(t_hit_record *hit, const t_ray *r,
+			const t_vec3 *outward_normal)
 {
 	hit->front_face = vec3_dot(r->direction, *outward_normal) < 0;
 	if (hit->front_face)

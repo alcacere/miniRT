@@ -1,15 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   aabb.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alcacere <alcacere@student.42madrid.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/05 22:40:31 by alcacere          #+#    #+#             */
+/*   Updated: 2026/03/05 22:41:41 by alcacere         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 #include <math.h>
 
-static void	check_axis(double min, double max, double orig, \
-						double inv, t_interval *t)
+static void	check_axis(t_interval ax, double orig, double inv, t_interval *t)
 {
 	double	t0;
 	double	t1;
 	double	tmp;
 
-	t0 = (min - orig) * inv;
-	t1 = (max - orig) * inv;
+	t0 = (ax.min - orig) * inv;
+	t1 = (ax.max - orig) * inv;
 	if (inv < 0.0)
 	{
 		tmp = t0;
@@ -24,13 +35,16 @@ static void	check_axis(double min, double max, double orig, \
 
 int	hit_aabb(const t_aabb *box, const t_ray *r, t_interval rayt)
 {
-	check_axis(box->min.x, box->max.x, r->origin.x, r->inv_dir.x, &rayt);
+	check_axis(interval_create(box->min.x, box->max.x),
+		r->origin.x, r->inv_dir.x, &rayt);
 	if (rayt.max <= rayt.min)
 		return (0);
-	check_axis(box->min.y, box->max.y, r->origin.y, r->inv_dir.y, &rayt);
+	check_axis(interval_create(box->min.y, box->max.y),
+		r->origin.y, r->inv_dir.y, &rayt);
 	if (rayt.max <= rayt.min)
 		return (0);
-	check_axis(box->min.z, box->max.z, r->origin.z, r->inv_dir.z, &rayt);
+	check_axis(interval_create(box->min.z, box->max.z),
+		r->origin.z, r->inv_dir.z, &rayt);
 	if (rayt.max <= rayt.min)
 		return (0);
 	return (1);
@@ -49,7 +63,6 @@ t_aabb	aabb_merge(t_aabb box0, t_aabb box1)
 	return (new_box);
 }
 
-/* Añade esto al final de aabb.c */
 void	aabb_pad(t_aabb *box)
 {
 	double	delta;

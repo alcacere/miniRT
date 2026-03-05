@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   random.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alcacere <alcacere@student.42madrid.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/05 22:40:48 by alcacere          #+#    #+#             */
+/*   Updated: 2026/03/05 22:41:33 by alcacere         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 
 double	random_double(uint32_t *seed)
@@ -13,18 +25,11 @@ double	random_double_range(uint32_t *seed, double min, double max)
 	return (min + (max - min) * random_double(seed));
 }
 
-t_vec3	random_vec3(uint32_t *seed)
-{
-	return (vec3_create(random_double(seed), \
-						random_double(seed), \
-						random_double(seed)));
-}
-
 t_vec3	random_vec3_range(uint32_t *seed, double min, double max)
 {
-	return (vec3_create(random_double_range(seed, min, max), \
-						random_double_range(seed, min, max), \
-						random_double_range(seed, min, max)));
+	return (vec3_create(random_double_range(seed, min, max),
+			random_double_range(seed, min, max),
+			random_double_range(seed, min, max)));
 }
 
 t_vec3	random_in_unit_sphere(uint32_t *seed)
