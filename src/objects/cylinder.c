@@ -1,7 +1,7 @@
 #include "objects.h"
 #include <math.h>
 
-static double	find_cylinder_root(t_cylinder *cy, const t_ray *r, 
+static double	find_cylinder_root(t_cylinder *cy, const t_ray *r,
 	t_interval rayt)
 {
 	t_vec3	oc;
@@ -20,17 +20,17 @@ static double	find_cylinder_root(t_cylinder *cy, const t_ray *r,
 	if (disc < 0)
 		return (-1.0);
 	t = (-abc[1] - sqrt(disc)) / abc[0];
-	if (t > rayt.min && t < rayt.max && 
-		fabs(dots[1] + t * dots[0]) <= cy->height / 2.0)
+	if (t > rayt.min && t < rayt.max
+		&& fabs(dots[1] + t * dots[0]) <= cy->height / 2.0)
 		return (t);
 	t = (-abc[1] + sqrt(disc)) / abc[0];
-	if (t > rayt.min && t < rayt.max && 
-		fabs(dots[1] + t * dots[0]) <= cy->height / 2.0)
+	if (t > rayt.min && t < rayt.max
+		&& fabs(dots[1] + t * dots[0]) <= cy->height / 2.0)
 		return (t);
 	return (-1.0);
 }
 
-int	hit_cylinder(const void *obj, const t_ray *r, 
+int	hit_cylinder(const void *obj, const t_ray *r,
 	t_interval rayt, t_hit_record *rec)
 {
 	t_object	*cy_obj;
@@ -45,8 +45,8 @@ int	hit_cylinder(const void *obj, const t_ray *r,
 		return (0);
 	rec->p = vec3_add(r->origin, vec3_scale(r->direction, rec->t));
 	m = vec3_dot(vec3_sub(rec->p, cy->center), cy->axis);
-	outward_normal = vec3_sub(rec->p, 
-		vec3_add(cy->center, vec3_scale(cy->axis, m)));
+	outward_normal = vec3_sub(rec->p,
+			vec3_add(cy->center, vec3_scale(cy->axis, m)));
 	outward_normal = vec3_scale(outward_normal, 1.0 / cy->radius);
 	set_face_normal(rec, r, &outward_normal);
 	rec->mat = &cy_obj->material;
@@ -66,7 +66,8 @@ t_hittable	*create_hittable_cylinder(t_object *obj)
 	cy = (t_cylinder *)obj->shape;
 	node->object = obj;
 	node->hit = hit_cylinder;
-	max_d = sqrt(cy->radius * cy->radius + (cy->height / 2.0) * (cy->height / 2.0));
+	max_d = sqrt(cy->radius * cy->radius + (cy->height / 2.0)
+			* (cy->height / 2.0));
 	ext = vec3_create(max_d, max_d, max_d);
 	node->bbox.min = vec3_sub(cy->center, ext);
 	node->bbox.max = vec3_add(cy->center, ext);

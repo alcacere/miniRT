@@ -18,28 +18,35 @@ static t_hittable	*create_wrapper(t_object *node)
 	return (NULL);
 }
 
+static int	count_objects(t_object *objects)
+{
+	int	count;
+
+	count = 0;
+	while (objects && ++count)
+		objects = objects->next;
+	return (count);
+}
+
 t_hittable	*build_world(t_object *objects)
 {
 	t_hittable	**arr;
+	t_hittable	*bvh_root;
 	int			count;
 	int			i;
-	t_object	*tmp;
-	t_hittable	*bvh_root;
 	uint32_t	seed;
 
-	count = 0;
-	tmp = objects;
-	while (tmp && ++count)
-		tmp = tmp->next;
+	count = count_objects(objects);
 	if (count == 0)
 		return (NULL);
 	arr = malloc(sizeof(t_hittable *) * count);
-	tmp = objects;
+	if (!arr)
+		return (NULL);
 	i = 0;
-	while (tmp)
+	while (objects)
 	{
-		arr[i++] = create_wrapper(tmp);
-		tmp = tmp->next;
+		arr[i++] = create_wrapper(objects);
+		objects = objects->next;
 	}
 	seed = 4242;
 	bvh_root = build_bvh(arr, count, &seed);

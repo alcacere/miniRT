@@ -1,7 +1,7 @@
 #include "objects.h"
 #include <math.h>
 
-int	hit_plane(const void *obj, const t_ray *r, \
+int	hit_plane(const void *obj, const t_ray *r,
 				t_interval rayt, t_hit_record *rec)
 {
 	t_object	*plane_obj;
@@ -19,14 +19,12 @@ int	hit_plane(const void *obj, const t_ray *r, \
 	t = vec3_dot(oc, pl->normal) / denominator;
 	if (t <= rayt.min || t >= rayt.max)
 		return (0);
-	
 	rec->t = t;
 	rec->p = vec3_add(r->origin, vec3_scale(r->direction, rec->t));
 	set_face_normal(rec, r, &pl->normal);
 	rec->mat = &plane_obj->material;
 	return (1);
 }
-
 
 t_hittable	*create_hittable_plane(t_object *obj)
 {

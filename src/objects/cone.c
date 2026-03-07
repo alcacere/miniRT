@@ -2,21 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-typedef struct s_cone_data
-{
-	t_vec3	tip;
-	t_vec3	axis;
-	double	k2;
-	double	a;
-	double	half_b;
-	double	c;
-	double	m;
-	double	disc;
-	double	r1;
-	double	r2;
-}	t_cone_data;
-
-static int	check_cap(t_cone *co, const t_ray *r, t_interval rayt, \
+static int	check_cap(t_cone *co, const t_ray *r, t_interval rayt,
 						t_hit_record *rec)
 {
 	double	denom;
@@ -42,65 +28,78 @@ static int	check_cap(t_cone *co, const t_ray *r, t_interval rayt, \
 	return (1);
 }
 
-static int	check_root(t_cone *co, t_cone_data *d, const t_ray *r, \
-						t_interval rayt, t_hit_record *rec, double root)
+static int	check_root(t_cone *co, t_cone_data *d, const t_ray *r,
+						t_hit_record *rec)
 {
 	t_vec3	cp;
 	t_vec3	normal;
 
-	if (root <= rayt.min || root >= rayt.max)
+	if (d->root <= d->t_min || d->root >= d->t_max)
 		return (0);
-	rec->p = vec3_add(r->origin, vec3_scale(r->direction, root));
+	rec->p = vec3_add(r->origin, vec3_scale(r->direction, d->root));
 	cp = vec3_sub(rec->p, d->tip);
 	d->m = vec3_dot(cp, d->axis);
 	if (d->m < 0.0 || d->m > co->height)
 		return (0);
-	rec->t = root;
+	rec->t = d->root;
 	normal = vec3_normalize(vec3_sub(cp, vec3_scale(d->axis, d->m * d->k2)));
 	set_face_normal(rec, r, &normal);
 	return (1);
 }
 
-int	hit_cone(const void *obj, const t_ray *r, t_interval rayt, \
+static void	get_roots(t_cone *co, t_cone_data *d, const t_ray *r)
+{
+	t_vec3	oc;
+
+	d->tip = vec3_add(co->center, vec3_scale(co->axis, co->height));
+	d->axis = vec3_scale(co->axis, -1.0);
+	d->k2 = (co->radius / co->height) * (co->radius / co->height) + 1.0;
+	oc = vec3_sub(r->origin, d->tip);
+	d->a = vec3_dot(r->direction, r->direction) - d->k2
+		* pow(vec3_dot(r->direction, d->axis), 2);
+	d->half_b = vec3_dot(r->direction, oc) - d->k2
+		* vec3_dot(r->direction, d->axis) * vec3_dot(oc, d->axis);
+	d->c = vec3_dot(oc, oc) - d->k2 * pow(vec3_dot(oc, d->axis), 2);
+	d->disc = d->half_b * d->half_b - d->a * d->c;
+	if (fabs(d->a) > 1e-8 && d->disc >= 0.0)
+	{
+		d->r1 = (-d->half_b - sqrt(d->disc)) / d->a;
+		d->r2 = (-d->half_b + sqrt(d->disc)) / d->a;
+		if (d->r1 > d->r2)
+		{
+			d->m = d->r1;
+			d->r1 = d->r2;
+			d->r2 = d->m;
+		}
+	}
+}
+
+int	hit_cone(const void *obj, const t_ray *r, t_interval rayt,
 				t_hit_record *rec)
 {
-	t_object	*node;
-	t_cone		*co;
 	t_cone_data	d;
 	int			hit;
 
-	node = (t_object *)obj;
-	co = (t_cone *)node->shape;
-	hit = 0;
-	if (check_cap(co, r, rayt, rec) && (hit = 1))
-		rayt.max = rec->t;
-	d.tip = vec3_add(co->center, vec3_scale(co->axis, co->height));
-	d.axis = vec3_scale(co->axis, -1.0);
-	d.k2 = (co->radius / co->height) * (co->radius / co->height) + 1.0;
-	d.a = vec3_dot(r->direction, r->direction) - d.k2 * \
-			pow(vec3_dot(r->direction, d.axis), 2);
-	d.half_b = vec3_dot(r->direction, vec3_sub(r->origin, d.tip)) - d.k2 * \
-				vec3_dot(r->direction, d.axis) * vec3_dot(vec3_sub(r->origin, d.tip), d.axis);
-	d.c = vec3_dot(vec3_sub(r->origin, d.tip), vec3_sub(r->origin, d.tip)) - d.k2 * \
-			pow(vec3_dot(vec3_sub(r->origin, d.tip), d.axis), 2);
-	d.disc = d.half_b * d.half_b - d.a * d.c;
+	hit = check_cap(((t_object *)obj)->shape, r, rayt, rec);
+	d.t_min = rayt.min;
+	d.t_max = rayt.max;
+	if (hit)
+		d.t_max = rec->t;
+	get_roots(((t_object *)obj)->shape, &d, r);
 	if (fabs(d.a) > 1e-8 && d.disc >= 0.0)
 	{
-		d.r1 = (-d.half_b - sqrt(d.disc)) / d.a;
-		d.r2 = (-d.half_b + sqrt(d.disc)) / d.a;
-		if (d.r1 > d.r2)
+		d.root = d.r1;
+		if (check_root(((t_object *)obj)->shape, &d, r, rec))
 		{
-			d.m = d.r1;
-			d.r1 = d.r2;
-			d.r2 = d.m;
+			hit = 1;
+			d.t_max = rec->t;
 		}
-		if (check_root(co, &d, r, rayt, rec, d.r1) && (hit = 1))
-			rayt.max = rec->t;
-		if (check_root(co, &d, r, rayt, rec, d.r2))
+		d.root = d.r2;
+		if (check_root(((t_object *)obj)->shape, &d, r, rec))
 			hit = 1;
 	}
 	if (hit)
-		rec->mat = &node->material;
+		rec->mat = &((t_object *)obj)->material;
 	return (hit);
 }
 
@@ -108,9 +107,9 @@ t_hittable	*create_hittable_cone(t_object *obj)
 {
 	t_hittable	*node;
 	t_cone		*co;
-	t_vec3		tip;
-	t_aabb		base_box;
-	t_aabb		tip_box;
+	t_aabb		b_box;
+	t_aabb		t_box;
+	t_vec3		rad;
 
 	node = malloc(sizeof(t_hittable));
 	if (!node)
@@ -118,12 +117,12 @@ t_hittable	*create_hittable_cone(t_object *obj)
 	co = (t_cone *)obj->shape;
 	node->object = obj;
 	node->hit = hit_cone;
-	tip = vec3_add(co->center, vec3_scale(co->axis, co->height));
-	base_box.min = vec3_sub(co->center, vec3_create(co->radius, co->radius, co->radius));
-	base_box.max = vec3_add(co->center, vec3_create(co->radius, co->radius, co->radius));
-	tip_box.min = tip;
-	tip_box.max = tip;
-	node->bbox = aabb_merge(base_box, tip_box);
+	t_box.min = vec3_add(co->center, vec3_scale(co->axis, co->height));
+	t_box.max = t_box.min;
+	rad = vec3_create(co->radius, co->radius, co->radius);
+	b_box.min = vec3_sub(co->center, rad);
+	b_box.max = vec3_add(co->center, rad);
+	node->bbox = aabb_merge(b_box, t_box);
 	aabb_pad(&node->bbox);
 	return (node);
 }

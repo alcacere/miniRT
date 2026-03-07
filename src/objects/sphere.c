@@ -25,7 +25,7 @@ static double	find_nearest_root(t_sphere *sp, const t_ray *r, t_interval rayt)
 	return (disc_root[1]);
 }
 
-int	hit_sphere(const void *obj, const t_ray *r, \
+int	hit_sphere(const void *obj, const t_ray *r,
 				t_interval rayt, t_hit_record *rec)
 {
 	t_object	*sphere_obj;

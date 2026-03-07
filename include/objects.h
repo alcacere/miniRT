@@ -4,6 +4,37 @@
 # include "hittable.h"
 # include "structures.h"
 
+typedef struct s_cone_data
+{
+	t_vec3	tip;
+	t_vec3	axis;
+	double	k2;
+	double	a;
+	double	half_b;
+	double	c;
+	double	m;
+	double	disc;
+	double	r1;
+	double	r2;
+	double	root;
+	double	t_min;
+	double	t_max;
+}	t_cone_data;
+
+typedef struct s_mt_data
+{
+	t_vec3	edge1;
+	t_vec3	edge2;
+	t_vec3	h;
+	t_vec3	s;
+	t_vec3	q;
+	double	a;
+	double	f;
+	double	u;
+	double	v;
+}	t_mt_data;
+
+
 typedef struct s_hittable_list
 {
 	t_hittable	**elements;
