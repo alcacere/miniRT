@@ -43,17 +43,19 @@ static int	check_cap(t_cone *co, const t_ray *r, t_interval rayt,
 static int	check_root(t_cone *co, t_cone_data *d, const t_ray *r,
 						t_hit_record *rec)
 {
+	t_vec3	p;
 	t_vec3	cp;
 	t_vec3	normal;
 
 	if (d->root <= d->t_min || d->root >= d->t_max)
 		return (0);
-	rec->p = vec3_add(r->origin, vec3_scale(r->direction, d->root));
-	cp = vec3_sub(rec->p, d->tip);
+	p = vec3_add(r->origin, vec3_scale(r->direction, d->root));
+	cp = vec3_sub(p, d->tip);
 	d->m = vec3_dot(cp, d->axis);
 	if (d->m < 0.0 || d->m > co->height)
 		return (0);
 	rec->t = d->root;
+	rec->p = p;
 	normal = vec3_normalize(vec3_sub(cp, vec3_scale(d->axis, d->m * d->k2)));
 	set_face_normal(rec, r, &normal);
 	return (1);
@@ -72,16 +74,17 @@ static void	get_roots(t_cone *co, t_cone_data *d, const t_ray *r)
 	d->half_b = vec3_dot(r->direction, oc) - d->k2
 		* vec3_dot(r->direction, d->axis) * vec3_dot(oc, d->axis);
 	d->c = vec3_dot(oc, oc) - d->k2 * pow(vec3_dot(oc, d->axis), 2);
-	d->disc = d->half_b * d->half_b - d->a * d->c;
-	if (fabs(d->a) > 1e-8 && d->disc >= 0.0)
+	d->r1 = INFINITY;
+	d->r2 = INFINITY;
+	if (fabs(d->a) < 1e-8 && fabs(d->half_b) > 1e-8)
+		d->r1 = -d->c / (2.0 * d->half_b);
+	else if (fabs(d->a) >= 1e-8)
 	{
-		d->r1 = (-d->half_b - sqrt(d->disc)) / d->a;
-		d->r2 = (-d->half_b + sqrt(d->disc)) / d->a;
-		if (d->r1 > d->r2)
+		d->disc = d->half_b * d->half_b - d->a * d->c;
+		if (d->disc >= 0.0)
 		{
-			d->m = d->r1;
-			d->r1 = d->r2;
-			d->r2 = d->m;
+			d->r1 = (-d->half_b - sqrt(d->disc)) / d->a;
+			d->r2 = (-d->half_b + sqrt(d->disc)) / d->a;
 		}
 	}
 }
@@ -98,18 +101,15 @@ int	hit_cone(const void *obj, const t_ray *r, t_interval rayt,
 	if (hit)
 		d.t_max = rec->t;
 	get_roots(((t_object *)obj)->shape, &d, r);
-	if (fabs(d.a) > 1e-8 && d.disc >= 0.0)
+	d.root = d.r1;
+	if (check_root(((t_object *)obj)->shape, &d, r, rec))
 	{
-		d.root = d.r1;
-		if (check_root(((t_object *)obj)->shape, &d, r, rec))
-		{
-			hit = 1;
-			d.t_max = rec->t;
-		}
-		d.root = d.r2;
-		if (check_root(((t_object *)obj)->shape, &d, r, rec))
-			hit = 1;
+		hit = 1;
+		d.t_max = rec->t;
 	}
+	d.root = d.r2;
+	if (check_root(((t_object *)obj)->shape, &d, r, rec))
+		hit = 1;
 	if (hit)
 		rec->mat = &((t_object *)obj)->material;
 	return (hit);

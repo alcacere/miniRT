@@ -35,8 +35,8 @@ void	apply_bumpmap(t_vec3 p, t_vec3 *normal)
 	double	bumpiness;
 	t_vec3	bump;
 
-	scale = 20.0;
-	bumpiness = 1.8;
+	scale = 50.0;
+	bumpiness = 7.8;
 	bump.x = sin(scale * p.x) * bumpiness;
 	bump.y = sin(scale * p.y) * bumpiness;
 	bump.z = sin(scale * p.z) * bumpiness;

@@ -11,16 +11,26 @@
 /* ************************************************************************** */
 
 #include "objects.h"
+#include <stdlib.h>
 #include <math.h>
+
+static double	check_valid_t(t_cylinder *cy, double dots[2], double t,
+	t_interval rayt)
+{
+	if (t > rayt.min && t < rayt.max
+		&& fabs(dots[1] + t * dots[0]) <= cy->height / 2.0)
+		return (t);
+	return (-1.0);
+}
 
 static double	find_cylinder_root(t_cylinder *cy, const t_ray *r,
 	t_interval rayt)
 {
-	t_vec3	oc;
 	double	abc[3];
 	double	dots[2];
-	double	disc;
-	double	t;
+	double	q[2];
+	double	t[2];
+	t_vec3	oc;
 
 	oc = vec3_sub(r->origin, cy->center);
 	dots[0] = vec3_dot(r->direction, cy->axis);
@@ -28,18 +38,19 @@ static double	find_cylinder_root(t_cylinder *cy, const t_ray *r,
 	abc[0] = vec3_dot(r->direction, r->direction) - (dots[0] * dots[0]);
 	abc[1] = vec3_dot(r->direction, oc) - (dots[0] * dots[1]);
 	abc[2] = vec3_dot(oc, oc) - (dots[1] * dots[1]) - (cy->radius * cy->radius);
-	disc = (abc[1] * abc[1]) - (abc[0] * abc[2]);
-	if (disc < 0)
+	q[0] = (abc[1] * abc[1]) - (abc[0] * abc[2]);
+	if (q[0] < 0.0 || fabs(abc[0]) < 1e-8)
 		return (-1.0);
-	t = (-abc[1] - sqrt(disc)) / abc[0];
-	if (t > rayt.min && t < rayt.max
-		&& fabs(dots[1] + t * dots[0]) <= cy->height / 2.0)
-		return (t);
-	t = (-abc[1] + sqrt(disc)) / abc[0];
-	if (t > rayt.min && t < rayt.max
-		&& fabs(dots[1] + t * dots[0]) <= cy->height / 2.0)
-		return (t);
-	return (-1.0);
+	q[1] = -abc[1] - sqrt(q[0]);
+	if (abc[1] < 0.0)
+		q[1] = -abc[1] + sqrt(q[0]);
+	t[0] = check_valid_t(cy, dots, q[1] / abc[0], rayt);
+	t[1] = -1.0;
+	if (q[1] != 0.0)
+		t[1] = check_valid_t(cy, dots, abc[2] / q[1], rayt);
+	if (t[0] > 0.0 && t[1] > 0.0)
+		return (fmin(t[0], t[1]));
+	return (fmax(t[0], t[1]));
 }
 
 int	hit_cylinder(const void *obj, const t_ray *r,

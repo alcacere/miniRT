@@ -14,27 +14,42 @@
 #include <stdlib.h>
 #include <math.h>
 
+static double	get_valid_root(double t1, double t2, t_interval rayt)
+{
+	double	min_t;
+	double	max_t;
+
+	min_t = fmin(t1, t2);
+	max_t = fmax(t1, t2);
+	if (min_t > rayt.min && min_t < rayt.max)
+		return (min_t);
+	if (max_t > rayt.min && max_t < rayt.max)
+		return (max_t);
+	return (-1.0);
+}
+
 static double	find_nearest_root(t_sphere *sp, const t_ray *r, t_interval rayt)
 {
 	t_vec3	oc;
 	double	abc[3];
-	double	disc_root[2];
+	double	q[2];
+	double	t[2];
 
 	oc = vec3_sub(r->origin, sp->center);
 	abc[0] = vec3_dot(r->direction, r->direction);
 	abc[1] = vec3_dot(oc, r->direction);
 	abc[2] = vec3_dot(oc, oc) - (sp->radius * sp->radius);
-	disc_root[0] = (abc[1] * abc[1]) - (abc[0] * abc[2]);
-	if (disc_root[0] < 0)
+	q[0] = (abc[1] * abc[1]) - (abc[0] * abc[2]);
+	if (q[0] < 0.0 || fabs(abc[0]) < 1e-8)
 		return (-1.0);
-	disc_root[1] = (-abc[1] - sqrt(disc_root[0])) / abc[0];
-	if (disc_root[1] <= rayt.min || disc_root[1] >= rayt.max)
-	{
-		disc_root[1] = (-abc[1] + sqrt(disc_root[0])) / abc[0];
-		if (disc_root[1] <= rayt.min || disc_root[1] >= rayt.max)
-			return (-1.0);
-	}
-	return (disc_root[1]);
+	q[1] = -abc[1] - sqrt(q[0]);
+	if (abc[1] < 0.0)
+		q[1] = -abc[1] + sqrt(q[0]);
+	t[0] = q[1] / abc[0];
+	t[1] = -1.0;
+	if (q[1] != 0.0)
+		t[1] = abc[2] / q[1];
+	return (get_valid_root(t[0], t[1], rayt));
 }
 
 int	hit_sphere(const void *obj, const t_ray *r,
