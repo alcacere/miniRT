@@ -34,7 +34,7 @@ static int	check_edges(t_triangle *tr, const t_ray *r, t_mt_data *d)
 	return (1);
 }
 
-int	hit_triangle(const void *object, const t_ray *r, t_interval rayt, \
+int	hit_triangle(const void *object, const t_ray *r, t_interval rayt,
 				t_hit_record *rec)
 {
 	t_object	*obj_node;

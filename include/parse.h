@@ -1,27 +1,39 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alcacere <alcacere@student.42madrid.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/08 16:13:17 by alcacere          #+#    #+#             */
+/*   Updated: 2026/03/08 16:13:18 by alcacere         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PARSE_H
 # define PARSE_H
 
 # include "minirt.h"
 
-int		parse_file(const char *filename, t_scene *scene);
-int		parse_line(char *line, t_scene *scene);
+int			parse_file(const char *filename, t_scene *scene);
+int			parse_line(char *line, t_scene *scene);
 
-int		parse_color(char *str, t_color *color);
-int		parse_vec3(char *str, t_vec3 *vec);
+int			parse_color(char *str, t_color *color);
+int			parse_vec3(char *str, t_vec3 *vec);
 
-int		is_valid_color(t_color c);
-int		is_valid_double(char *str);
-int		is_normalized(t_vec3 v);
+int			is_valid_color(t_color c);
+int			is_valid_double(char *str);
+int			is_normalized(t_vec3 v);
 
-int		parse_ambient(char **tokens, t_scene *scene);
-int		parse_camera(char **tokens, t_scene *scene);
-int		parse_light(char **tokens, t_scene *scene);
+int			parse_ambient(char **tokens, t_scene *scene);
+int			parse_camera(char **tokens, t_scene *scene);
+int			parse_light(char **tokens, t_scene *scene);
 
-int		parse_sphere(char **tokens, t_scene *scene);
-int		parse_plane(char **tokens, t_scene *scene);
-int		parse_cylinder(char **tokens, t_scene *scene);
-int 	parse_triangle(char **tokens, t_scene *scene);
-int parse_cone(char **tokens, t_scene *scene);
+int			parse_sphere(char **tokens, t_scene *scene);
+int			parse_plane(char **tokens, t_scene *scene);
+int			parse_cylinder(char **tokens, t_scene *scene);
+int			parse_triangle(char **tokens, t_scene *scene);
+int			parse_cone(char **tokens, t_scene *scene);
 void		apply_material(t_object *obj, char *token);
 t_object	*create_base_object(t_obj_type type, t_color color);
 int			parse_triangle(char **tokens, t_scene *scene);
