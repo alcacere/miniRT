@@ -1,24 +1,62 @@
-A 0.2 150,150,255
-C 0,1.0,-3.0 0,-0.1,1.0 70
-L -5.0,5.0,1.0 0.8 255,255,255
-L 5.0,5.0,1.0 0.8 255,255,255
-L -3.0,-1.0,1.0 0.8 255,255,255
+# ==========================================
+# LA CORNELL BOX (Adaptación para miniRT)
+# ==========================================
 
-# Suelo de ajedrez infinito
-pl 0.0,0.0,0.0 0.0,1.0,0.0 200,200,200
-#
-## Esfera de Espejo a la izquierda
-sp -0.0,1.0,0.0 2.0 125,125,125 glass
-#
-## Cilindro Mate al fondo a la derecha
-cy 2.5,1.0,1.5 0.0,1.0,0.0 1.5 2.0 50,255,100 metal
-#
-co -3.0,0.0,0.0 0.0,1.0,0.0 2.3 3.0 255,100,200 metal
+# 1. AMBIENTE Y CÁMARA
+# Luz ambiental muy baja para dejar que el Path Tracing haga su magia con los rebotes
+A 0.05 255,255,255
+# Cámara centrada, ligeramente elevada y mirando hacia el fondo de la caja
+C 0,5,-15 0,0,1 45
 
-#sp 0.0,0.0,2.0 2.0 200,100,50 bumpmap
+# 2. LUZ PRINCIPAL
+# Gracias a tu parser, esto creará una esfera emisiva brillante cerca del techo
+L 0,9.0,5 0.8 255,255,255
 
-# Pirámide de Cristal en el centro
-#tr -1.0,-1.0,-1.5 1.0,-1.0,-1.5 0.0,1.0,-1.0 255,255,255 metal
-#tr -1.0,-1.0,-1.5 0.0,-1.0,-2.5 0.0,1.0,-1.0 255,255,255 metal
-#tr 1.0,-1.0,-1.5 0.0,-1.0,-2.5 0.0,1.0,-1.0 50,50,50 metal
-#tr -1.0,-1.0,-1.5 1.0,-1.0,-1.5 0.0,-1.0,-2.5 255,0,0
+# 3. LA CAJA (Habitación de 10x10x10)
+# Suelo (Y = 0)
+pl 0,0,0 0,1,0 220,220,220
+# Techo (Y = 10)
+pl 0,10,0 0,-1,0 220,220,220
+# Pared del Fondo (Z = 10)
+pl 0,0,10 0,0,-1 220,220,220
+# Pared Izquierda - ROJA (X = -5)
+pl -5,0,0 1,0,0 255,20,20
+# Pared Derecha - VERDE (X = 5)
+pl 5,0,0 -1,0,0 20,255,20
+
+# 4. LOS OBJETOS INTERIORES
+# Reemplazo de la caja alta: Un cilindro blanco mate apoyado en el suelo
+# (Centro Y=3.5 y Altura=7, por lo que su base toca exactamente Y=0)
+cy -2,3.5,6.5 0,1,0 3 7 220,220,220
+
+# Reemplazo de la caja baja: Una esfera de cristal apoyada en el suelo
+# El cristal invertirá visualmente los colores de las paredes roja y verde!
+sp 2,1.5,3.5 3 255,255,255 glass
+
+# Extra: Una pequeña esfera con tu textura procedural (Bump Map) en la parte delantera
+sp 0,0.75,1.5 1.5 255,150,50 bumpmap
+
+#A 0.2 150,150,255
+#C 0,1.0,-3.0 0,-0.1,1.0 70
+#L -5.0,5.0,1.0 0.8 255,255,255
+#L 5.0,5.0,1.0 0.8 255,255,255
+#L -3.0,-1.0,1.0 0.8 255,255,255
+#
+## Suelo de ajedrez infinito
+#pl 0.0,0.0,0.0 0.0,1.0,0.0 200,200,200
+##
+### Esfera de Espejo a la izquierda
+#sp -0.0,1.0,0.0 2.0 125,125,125 glass
+##
+### Cilindro Mate al fondo a la derecha
+#cy 2.5,1.0,1.5 0.0,1.0,0.0 1.5 2.0 50,255,100 metal
+##
+#co -3.0,0.0,0.0 0.0,1.0,0.0 2.3 3.0 255,100,200 metal
+#
+##sp 0.0,0.0,2.0 2.0 200,100,50 bumpmap
+#
+## Pirámide de Cristal en el centro
+##tr -1.0,-1.0,-1.5 1.0,-1.0,-1.5 0.0,1.0,-1.0 255,255,255 metal
+##tr -1.0,-1.0,-1.5 0.0,-1.0,-2.5 0.0,1.0,-1.0 255,255,255 metal
+##tr 1.0,-1.0,-1.5 0.0,-1.0,-2.5 0.0,1.0,-1.0 50,50,50 metal
+##tr -1.0,-1.0,-1.5 1.0,-1.0,-1.5 0.0,-1.0,-2.5 255,0,0

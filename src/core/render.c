@@ -43,7 +43,7 @@ static t_color	render_pixel(t_render_ctx *ctx, int c[2])
 	uint32_t	seed;
 
 	color = vec3_create(0, 0, 0);
-	seed = (uint32_t)(c[1] * 73856093 ^ c[0] * 19349663);
+	seed = (uint32_t)(c[1] * 73856093 ^ c[0] * 19349663) + 32;
 	s[1] = -1;
 	while (++s[1] < ctx->cam->sqrt_spp)
 	{
