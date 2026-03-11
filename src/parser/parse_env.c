@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 19:25:26 by alcacere          #+#    #+#             */
-/*   Updated: 2026/03/10 19:49:06 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/11 02:00:40 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,20 @@ int	parse_camera(char **tokens, t_scene *scene)
 	return (1);
 }
 
+static void	init_light_obj(t_object *obj, t_sphere *sp, double brightness)
+{
+	obj->material.color.x *= LIGHT_R;
+	obj->material.color.y *= LIGHT_G;
+	obj->material.color.z *= LIGHT_B;
+	obj->type = OBJ_SPHERE;
+	obj->material.type = MAT_EMISSION;
+	obj->material.emit_strength = brightness * 20.0;
+	obj->material.is_checkerboard = 0;
+	sp->radius = 1.0;
+	obj->shape = sp;
+	obj->next = NULL;
+}
+
 int	parse_light(char **tokens, t_scene *scene)
 {
 	t_object	*obj;
@@ -68,16 +82,7 @@ int	parse_light(char **tokens, t_scene *scene)
 	if (!obj || !sp || !parse_vec3(tokens[1], &sp->center)
 		|| !parse_color(tokens[3], &obj->material.color))
 		return (free(obj), free(sp), 0);
-	obj->material.color.x *= LIGHT_R;
-	obj->material.color.y *= LIGHT_G;
-	obj->material.color.z *= LIGHT_B;
-	obj->type = OBJ_SPHERE;
-	obj->material.type = MAT_EMISSION;
-	obj->material.emit_strength = brightness * 20.0;
-	obj->material.is_checkerboard = 0;
-	sp->radius = 1.0;
-	obj->shape = sp;
-	obj->next = NULL;
+	init_light_obj(obj, sp, brightness);
 	object_add_back(&scene->objects, obj);
 	return (1);
 }

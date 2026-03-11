@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/08 16:12:58 by alcacere          #+#    #+#             */
-/*   Updated: 2026/03/10 20:46:17 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/11 02:00:38 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,5 +68,6 @@ void	init_graphics(t_minirt *rt, t_img *img);
 int		key_hook(int keycode, t_minirt *rt);
 int		close_window(t_minirt *rt);
 int		expose_hook(t_minirt *rt);
+int		rgb_to_int(t_color color);
 
 #endif

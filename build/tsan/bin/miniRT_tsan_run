@@ -1,2 +1,0 @@
-#!/bin/sh
-exec setarch x86_64 -R /home/dlesieur/Documents/minirt/miniRT/build/tsan/bin/miniRT_tsan "$@"

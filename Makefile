@@ -48,7 +48,7 @@ ACCEL_SRC   = aabb.c bvh.c
 
 CORE_SRC    = graphics.c main.c texture.c \
               memory.c camera_ray.c render.c list_utils.c camera_init.c \
-              scatter.c
+              scatter.c color.c
 
 GEOM_SRC    = cone.c cylinder.c plane.c sphere.c triangle.c
 

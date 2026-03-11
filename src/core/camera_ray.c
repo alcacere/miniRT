@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 22:19:41 by alcacere          #+#    #+#             */
-/*   Updated: 2026/03/10 19:33:51 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/11 02:00:42 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ static t_color	sample_one_light(t_hit_record *rec, t_object *light,
 {
 	t_vec3			to_light;
 	double			dist;
-	double			nl;
 	t_ray			shadow;
 	t_hit_record	tmp;
 	t_sphere		*sp;
@@ -46,15 +45,15 @@ static t_color	sample_one_light(t_hit_record *rec, t_object *light,
 	if (dist < 1e-6)
 		return (vec3_create(0, 0, 0));
 	to_light = vec3_scale(to_light, 1.0 / dist);
-	nl = vec3_dot(rec->normal, to_light);
-	if (nl <= 0.0)
+	if (vec3_dot(rec->normal, to_light) <= 0.0)
 		return (vec3_create(0, 0, 0));
 	shadow = ray_create(rec->p, to_light, 0);
 	if (ctx->world->hit(ctx->world->object, &shadow,
 			interval_create(0.001, dist - sp->radius - 0.01), &tmp))
 		return (vec3_create(0, 0, 0));
 	return (vec3_scale(light->material.color,
-			light->material.emit_strength * nl / dist));
+			light->material.emit_strength
+			* vec3_dot(rec->normal, to_light) / dist));
 }
 
 /*

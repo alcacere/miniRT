@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/08 16:13:22 by alcacere          #+#    #+#             */
-/*   Updated: 2026/03/10 22:48:13 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/11 02:00:38 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ typedef struct s_minirt
 	void		*win;
 	void		*img_ptr;
 	void		*world;
-	t_scene	scene;
+	t_scene		scene;
 }	t_minirt;
 
 #endif
