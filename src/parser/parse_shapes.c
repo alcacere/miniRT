@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_shapes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alcacere <alcacere@student.42madrid.com>   +#+  +:+       +#+        */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 19:25:35 by alcacere          #+#    #+#             */
-/*   Updated: 2026/03/05 19:25:38 by alcacere         ###   ########.fr       */
+/*   Updated: 2026/03/10 17:39:15 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ int	parse_sphere(char **tokens, t_scene *scene)
 		return (free(obj), free(sp), 0);
 	apply_material(obj, tokens[4]);
 	sp->radius = ft_atof(tokens[2]) / 2.0;
+	if (sp->radius <= 0.0)
+		return (free(obj), free(sp), 0);
 	obj->shape = sp;
 	object_add_back(&scene->objects, obj);
 	return (1);
@@ -115,6 +117,8 @@ int	parse_cylinder(char **tokens, t_scene *scene)
 	cy->axis = vec3_normalize(cy->axis);
 	cy->radius = ft_atof(tokens[3]) / 2.0;
 	cy->height = ft_atof(tokens[4]);
+	if (cy->radius <= 0.0 || cy->height <= 0.0)
+		return (free(obj), free(cy), 0);
 	obj->shape = cy;
 	object_add_back(&scene->objects, obj);
 	return (1);

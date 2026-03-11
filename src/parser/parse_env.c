@@ -3,25 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   parse_env.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alcacere <alcacere@student.42madrid.com>   +#+  +:+       +#+        */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 19:25:26 by alcacere          #+#    #+#             */
-/*   Updated: 2026/03/05 19:25:30 by alcacere         ###   ########.fr       */
+/*   Updated: 2026/03/10 19:49:06 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h"
+#include "graphics.h"
 #include <stdlib.h>
 
 int	parse_ambient(char **tokens, t_scene *scene)
 {
 	if (!tokens[1] || !tokens[2] || tokens[3])
 		return (0);
+	if (scene->has_ambient)
+		return (0);
 	scene->ambient.ratio = ft_atof(tokens[1]);
 	if (scene->ambient.ratio < 0.0 || scene->ambient.ratio > 1.0)
 		return (0);
 	if (!parse_color(tokens[2], &scene->ambient.color))
 		return (0);
+	scene->has_ambient = 1;
 	return (1);
 }
 
@@ -30,6 +34,8 @@ int	parse_camera(char **tokens, t_scene *scene)
 	t_vec3	dir;
 
 	if (!tokens[1] || !tokens[2] || !tokens[3] || tokens[4])
+		return (0);
+	if (scene->has_camera)
 		return (0);
 	if (!parse_vec3(tokens[1], &scene->camera.center))
 		return (0);
@@ -40,8 +46,9 @@ int	parse_camera(char **tokens, t_scene *scene)
 		return (0);
 	scene->camera.lookat = vec3_add(scene->camera.center, dir);
 	scene->camera.vfov = ft_atof(tokens[3]);
-	if (scene->camera.vfov < 0.0 || scene->camera.vfov > 180.0)
+	if (scene->camera.vfov <= 0.0 || scene->camera.vfov >= 180.0)
 		return (0);
+	scene->has_camera = 1;
 	return (1);
 }
 
@@ -61,6 +68,9 @@ int	parse_light(char **tokens, t_scene *scene)
 	if (!obj || !sp || !parse_vec3(tokens[1], &sp->center)
 		|| !parse_color(tokens[3], &obj->material.color))
 		return (free(obj), free(sp), 0);
+	obj->material.color.x *= LIGHT_R;
+	obj->material.color.y *= LIGHT_G;
+	obj->material.color.z *= LIGHT_B;
 	obj->type = OBJ_SPHERE;
 	obj->material.type = MAT_EMISSION;
 	obj->material.emit_strength = brightness * 20.0;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structures.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alcacere <alcacere@student.42madrid.com>   +#+  +:+       +#+        */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/08 16:13:22 by alcacere          #+#    #+#             */
-/*   Updated: 2026/03/08 16:13:22 by alcacere         ###   ########.fr       */
+/*   Updated: 2026/03/10 22:48:13 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,12 +157,16 @@ typedef struct s_scene
 	t_ambient	ambient;
 	t_camera	camera;
 	t_object	*objects;
+	int			has_ambient;
+	int			has_camera;
 }	t_scene;
 
 typedef struct s_minirt
 {
-	void	*mlx;
-	void	*win;
+	void		*mlx;
+	void		*win;
+	void		*img_ptr;
+	void		*world;
 	t_scene	scene;
 }	t_minirt;
 

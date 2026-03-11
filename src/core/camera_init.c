@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   camera_init.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alcacere <alcacere@student.42madrid.com>   +#+  +:+       +#+        */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 22:19:36 by alcacere          #+#    #+#             */
-/*   Updated: 2026/03/05 22:19:48 by alcacere         ###   ########.fr       */
+/*   Updated: 2026/03/10 19:00:01 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "camera.h"
+#include "graphics.h"
 #include <math.h>
 
 static void	calc_viewport(t_camera *c, double *vp_h, double *vp_w)
@@ -39,13 +40,16 @@ void	init_camera(t_camera *c)
 	t_vec3	vp_v;
 	t_vec3	vp_ul;
 
-	c->image_width = 900;
-	c->aspect_ratio = 16.0 / 9.0;
-	c->image_height = (int)(c->image_width / c->aspect_ratio);
-	c->sqrt_spp = 30;
+	c->center = c->lookfrom;
+	c->image_width = WIN_W;
+	c->image_height = WIN_H;
+	if (c->image_height < 1)
+		c->image_height = 1;
+	c->aspect_ratio = (double)c->image_width / (double)c->image_height;
+	c->sqrt_spp = SQRT_SPP;
 	c->recip_sqrt_spp = 1.0 / c->sqrt_spp;
 	c->pixel_samples_scale = 1.0 / (c->sqrt_spp * c->sqrt_spp);
-	c->max_depth = 10;
+	c->max_depth = MAX_DEPTH;
 	calc_viewport(c, &vp_dim[0], &vp_dim[1]);
 	vp_u = vec3_scale(c->u, vp_dim[1]);
 	vp_v = vec3_scale(c->v, -vp_dim[0]);

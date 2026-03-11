@@ -1,0 +1,4 @@
+# Plane normal out of normalized range
+A 0.2 255,255,255
+C 0,0,-10 0,0,1 70
+pl 0,0,0 0,5,0 255,255,255

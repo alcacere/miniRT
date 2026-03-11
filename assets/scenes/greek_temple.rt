@@ -1,0 +1,41 @@
+# ==========================================
+# GREEK TEMPLE - Columns and floor
+# Inspired by classical architecture
+# ==========================================
+
+A 0.15 220,220,240
+
+C 0,8,-30 0,-0.1,1 55
+
+# Main sunlight from above-right
+L 15,25,0 0.8 255,245,220
+
+# Floor (marble-like)
+pl 0,0,0 0,1,0 230,225,215 checker
+
+# Roof slab (large flat cylinder)
+cy 0,14,0 0,1,0 30 1 200,195,185
+
+# Front row of columns (left to right)
+cy -10,0,0 0,1,0 2 14 220,215,205
+cy -5,0,0 0,1,0 2 14 220,215,205
+cy 0,0,0 0,1,0 2 14 220,215,205
+cy 5,0,0 0,1,0 2 14 220,215,205
+cy 10,0,0 0,1,0 2 14 220,215,205
+
+# Back row of columns
+cy -10,0,10 0,1,0 2 14 210,205,195
+cy -5,0,10 0,1,0 2 14 210,205,195
+cy 0,0,10 0,1,0 2 14 210,205,195
+cy 5,0,10 0,1,0 2 14 210,205,195
+cy 10,0,10 0,1,0 2 14 210,205,195
+
+# Pediment (triangular roof front)
+tr -12,14.5,-0.5 12,14.5,-0.5 0,18,-0.5 190,185,175
+
+# Back wall
+pl 0,0,11 0,0,-1 200,195,185
+
+# A statue (sphere on a pedestal cylinder)
+cy 0,0,5 0,1,0 2.5 6 180,170,160
+sp 0,8,5 2 200,190,175

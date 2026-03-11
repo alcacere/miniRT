@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bvh.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alcacere <alcacere@student.42madrid.com>   +#+  +:+       +#+        */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/08 15:45:23 by alcacere          #+#    #+#             */
-/*   Updated: 2026/03/08 15:45:36 by alcacere         ###   ########.fr       */
+/*   Updated: 2026/03/10 20:27:41 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <stdlib.h>
 
 t_hittable	*build_bvh(t_hittable **list, int n, uint32_t *seed);
+void		ft_swap_ptr(void **a, void **b);
 
 static double	get_axis_val(t_hittable *node, int axis)
 {
@@ -26,9 +27,8 @@ static double	get_axis_val(t_hittable *node, int axis)
 
 static void	sort_hittables(t_hittable **arr, int n, int axis)
 {
-	int			i;
-	int			j;
-	t_hittable	*tmp;
+	int		i;
+	int		j;
 
 	i = -1;
 	while (++i < n - 1)
@@ -37,11 +37,7 @@ static void	sort_hittables(t_hittable **arr, int n, int axis)
 		while (++j < n - i - 1)
 		{
 			if (get_axis_val(arr[j], axis) > get_axis_val(arr[j + 1], axis))
-			{
-				tmp = arr[j];
-				arr[j] = arr[j + 1];
-				arr[j + 1] = tmp;
-			}
+				ft_swap_ptr((void **)&arr[j], (void **)&arr[j + 1]);
 		}
 	}
 }
