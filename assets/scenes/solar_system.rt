@@ -1,0 +1,39 @@
+# ==========================================
+# SOLAR SYSTEM - Miniature
+# A small solar system with planets orbiting
+# ==========================================
+
+A 0.05 10,10,30
+
+C 0,200,-600 0,-0.2,1 60
+
+# Sun (emissive)
+L 0,0,0 0.9 255,220,150
+
+# Mercury - small grey sphere close to center
+sp 40,0,10 8 180,180,180
+
+# Venus - yellowish
+sp 80,10,20 14 230,200,100
+
+# Earth - blue with hint of green
+sp 140,0,0 16 50,100,255
+
+# Mars - red
+sp 200,-5,-10 12 200,80,50
+
+# Jupiter - large orange
+sp 320,0,30 50 210,170,100
+
+# Saturn - with ring approximated by a flat plane-like cylinder
+sp 460,0,-20 40 220,200,150
+cy 460,0,-20 0,1,0 120 2 180,160,120
+
+# Uranus - light blue
+sp 580,5,10 30 170,220,240
+
+# Neptune - deep blue
+sp 700,0,-15 28 50,50,200
+
+# Floor plane to give perspective
+pl 0,-60,0 0,1,0 20,20,40

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_shapes_extra.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alcacere <alcacere@student.42madrid.com>   +#+  +:+       +#+        */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 19:25:43 by alcacere          #+#    #+#             */
-/*   Updated: 2026/03/05 19:25:45 by alcacere         ###   ########.fr       */
+/*   Updated: 2026/03/10 17:39:16 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ int	parse_cone(char **tokens, t_scene *scene)
 	co->axis = vec3_normalize(co->axis);
 	co->radius = ft_atof(tokens[3]) / 2.0;
 	co->height = ft_atof(tokens[4]);
+	if (co->radius <= 0.0 || co->height <= 0.0)
+		return (free(obj), free(co), 0);
 	obj->shape = co;
 	object_add_back(&scene->objects, obj);
 	return (1);

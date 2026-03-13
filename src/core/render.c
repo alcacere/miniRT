@@ -3,37 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alcacere <alcacere@student.42madrid.com>   +#+  +:+       +#+        */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 22:20:42 by alcacere          #+#    #+#             */
-/*   Updated: 2026/03/05 22:20:45 by alcacere         ###   ########.fr       */
+/*   Updated: 2026/03/11 02:00:42 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "camera.h"
+#include "graphics.h"
 #include <stdlib.h>
-#include <math.h>
-
-int	rgb_to_int(t_color color)
-{
-	int	r;
-	int	g;
-	int	b;
-
-	color.x = sqrt(fabs(color.x));
-	color.y = sqrt(fabs(color.y));
-	color.z = sqrt(fabs(color.z));
-	if (color.x > 1.0)
-		color.x = 1.0;
-	if (color.y > 1.0)
-		color.y = 1.0;
-	if (color.z > 1.0)
-		color.z = 1.0;
-	r = (int)(color.x * 255.0);
-	g = (int)(color.y * 255.0);
-	b = (int)(color.z * 255.0);
-	return ((r << 16) | (g << 8) | b);
-}
 
 static t_color	render_pixel(t_render_ctx *ctx, int c[2])
 {
@@ -43,7 +22,7 @@ static t_color	render_pixel(t_render_ctx *ctx, int c[2])
 	uint32_t	seed;
 
 	color = vec3_create(0, 0, 0);
-	seed = (uint32_t)(c[1] * 73856093 ^ c[0] * 19349663) + 32;
+	seed = ((uint32_t)c[1] * 73856093u ^ (uint32_t)c[0] * 19349663u) + 32;
 	s[1] = -1;
 	while (++s[1] < ctx->cam->sqrt_spp)
 	{

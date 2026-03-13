@@ -1,0 +1,4 @@
+# Sphere with zero diameter
+A 0.2 255,255,255
+C 0,0,-10 0,0,1 70
+sp 0,0,0 0 255,0,0

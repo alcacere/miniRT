@@ -3,15 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alcacere <alcacere@student.42madrid.com>   +#+  +:+       +#+        */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 19:25:54 by alcacere          #+#    #+#             */
-/*   Updated: 2026/03/05 19:25:56 by alcacere         ###   ########.fr       */
+/*   Updated: 2026/03/10 17:39:20 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h"
 #include "libft.h"
+
+int	is_valid_double(char *str)
+{
+	int	has_digit;
+	int	has_dot;
+
+	has_digit = 0;
+	has_dot = 0;
+	if (!str || !*str)
+		return (0);
+	if (*str == '-' || *str == '+')
+		str++;
+	while (*str)
+	{
+		if (ft_isdigit(*str))
+			has_digit = 1;
+		else if (*str == '.' && !has_dot)
+			has_dot = 1;
+		else
+			return (0);
+		str++;
+	}
+	return (has_digit);
+}
 
 int	parse_color(char *str, t_color *color)
 {
@@ -73,11 +97,16 @@ int	is_valid_color(t_color c)
 
 int	is_normalized(t_vec3 v)
 {
+	double	len;
+
 	if (v.x < -1.0 || v.x > 1.0)
 		return (0);
 	if (v.y < -1.0 || v.y > 1.0)
 		return (0);
 	if (v.z < -1.0 || v.z > 1.0)
+		return (0);
+	len = v.x * v.x + v.y * v.y + v.z * v.z;
+	if (len < 1e-8)
 		return (0);
 	return (1);
 }

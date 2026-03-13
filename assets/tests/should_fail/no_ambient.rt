@@ -1,0 +1,4 @@
+# No ambient light - missing mandatory A
+C 0,0,-10 0,0,1 70
+L 0,10,0 0.6 255,255,255
+sp 0,0,0 5 255,0,0

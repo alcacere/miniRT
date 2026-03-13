@@ -1,0 +1,12 @@
+# Lots of comments and blank lines
+# This is a comment
+A 0.1 200,200,200
+
+# Another comment
+C 0,0,-10 0,0,1 60
+
+# Light
+L 0,10,0 0.6 255,255,255
+
+# A sphere
+sp 0,0,0 5 255,0,0

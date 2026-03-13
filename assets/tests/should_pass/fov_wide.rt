@@ -1,0 +1,5 @@
+# Camera FOV at 179 (very wide, almost hemisphere)
+A 0.2 255,255,255
+C 0,0,-3 0,0,1 179
+L 0,10,0 0.6 255,255,255
+sp 0,0,0 5 255,0,0

@@ -1,0 +1,52 @@
+# ==========================================
+# BILLIARD TABLE - Pool table with balls
+# ==========================================
+
+A 0.1 100,120,100
+
+C 0,20,-18 0,-0.6,0.5 50
+
+# Overhead lamp
+L 0,15,0 0.8 255,245,220
+
+# Table felt (green plane)
+pl 0,0,0 0,1,0 30,120,50
+
+# Table cushions (brown cylinders along edges)
+cy -8,0,0 0,0,1 0.8 14 100,60,20
+cy 8,0,0 0,0,1 0.8 14 100,60,20
+cy 0,0,-7 1,0,0 0.8 16 100,60,20
+cy 0,0,7 1,0,0 0.8 16 100,60,20
+
+# Cue ball (white)
+sp 0,0.8,-4 1.6 240,240,240
+
+# 1-ball (yellow)
+sp 0,0.8,2 1.6 255,220,30
+
+# 2-ball (blue)
+sp -1.2,0.8,3.5 1.6 0,70,200
+
+# 3-ball (red)
+sp 1.2,0.8,3.5 1.6 200,30,30
+
+# 4-ball (purple)
+sp 0,0.8,5 1.6 120,30,170
+
+# 5-ball (orange)
+sp -2.4,0.8,5 1.6 240,140,30
+
+# 6-ball (green)
+sp 2.4,0.8,5 1.6 30,140,40
+
+# 7-ball (maroon)
+sp -1.2,0.8,6.5 1.6 120,20,20
+
+# 8-ball (black - center of rack)
+sp 1.2,0.8,6.5 1.6 15,15,15
+
+# 9-ball (yellow stripe)
+sp 0,0.8,8 1.6 230,200,50
+
+# Cue stick (long thin cylinder)
+cy 0,1.5,-6 0,0,1 0.3 12 180,140,80

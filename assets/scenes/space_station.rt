@@ -1,0 +1,51 @@
+# ==========================================
+# SPACE STATION - Sci-fi corridor
+# Metallic cylinders and glass panels
+# ==========================================
+
+A 0.05 20,20,40
+
+C 0,3,-15 0,0,1 70
+
+# Strip lights along corridor
+L -3,5,0 0.4 100,150,255
+L 3,5,0 0.4 100,150,255
+L 0,5,10 0.5 150,200,255
+
+# Floor (dark metal)
+pl 0,0,0 0,1,0 40,40,50 checker
+
+# Ceiling
+pl 0,6,0 0,-1,0 30,30,40
+
+# Left wall
+pl -5,0,0 1,0,0 50,50,60
+
+# Right wall
+pl 5,0,0 -1,0,0 50,50,60
+
+# End wall (viewport - glass)
+pl 0,0,20 0,0,-1 30,30,50
+
+# Support columns (metal)
+cy -4,0,0 0,1,0 0.8 6 120,120,140 metal
+cy 4,0,0 0,1,0 0.8 6 120,120,140 metal
+cy -4,0,8 0,1,0 0.8 6 120,120,140 metal
+cy 4,0,8 0,1,0 0.8 6 120,120,140 metal
+cy -4,0,16 0,1,0 0.8 6 120,120,140 metal
+cy 4,0,16 0,1,0 0.8 6 120,120,140 metal
+
+# Pipes running along ceiling
+cy -3,5.5,0 0,0,1 0.3 20 80,80,100 metal
+cy 3,5.5,0 0,0,1 0.3 20 80,80,100 metal
+
+# Glass observation dome (center of ceiling)
+sp 0,8,10 5 200,220,255 glass
+
+# Control console (box-like)
+cy 0,0,15 0,1,0 2 1.5 60,60,70
+sp 0,2,15 1 100,200,255
+
+# Crate (approximated by cylinder)
+cy -3,0,12 0,1,0 1.5 1.5 140,120,80
+cy -3,1.5,12 0,1,0 1.5 1.5 130,110,70

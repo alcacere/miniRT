@@ -1,0 +1,39 @@
+# ==========================================
+# GLASS AND MIRRORS - Material showcase
+# Demonstrates glass and metal objects
+# ==========================================
+
+A 0.1 150,150,200
+
+C 0,5,-15 0,-0.1,1 60
+
+# Two lights for interesting reflections
+L -8,12,-5 0.6 255,230,200
+L 8,12,-5 0.6 200,230,255
+
+# Checkerboard floor
+pl 0,0,0 0,1,0 200,200,200 checker
+
+# Glass sphere (center)
+sp 0,2.5,0 5 255,255,255 glass
+
+# Metal sphere (left)
+sp -6,2,2 4 200,180,150 metal
+
+# Metal sphere (right)
+sp 6,2,2 4 150,180,220 metal
+
+# Small glass sphere on top of metal
+sp -6,5.5,2 1.5 255,255,255 glass
+
+# Background sphere
+sp 0,3,10 6 255,100,100
+
+# Red metal standing cylinder
+cy -3,0,-5 0,1,0 2 4 200,50,50 metal
+
+# Blue glass cylinder
+cy 3,0,-5 0,1,0 2 4 100,100,255 glass
+
+# Rear plane
+pl 0,0,15 0,0,-1 180,180,200

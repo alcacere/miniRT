@@ -1,0 +1,45 @@
+# ==========================================
+# SNOWMAN - Classic winter scene
+# Three stacked spheres with a hat
+# ==========================================
+
+A 0.15 200,210,230
+
+C 0,5,-18 0,-0.05,1 50
+
+# Sunlight from behind-left
+L -8,15,-5 0.8 255,250,230
+
+# Ground (snow)
+pl 0,0,0 0,1,0 240,240,255
+
+# Body - bottom sphere (large)
+sp 0,2,0 4 245,245,255
+
+# Body - middle sphere
+sp 0,5.5,0 3 245,245,255
+
+# Head
+sp 0,8,0 2 245,245,255
+
+# Hat - brim (flat cylinder)
+# Anti-collision: head top = 8 + 1 = 9, brim h=0.3 so center at 9 + 0.15 = 9.15
+cy 0,9.15,0 0,1,0 3 0.3 30,30,30
+
+# Hat - top (tall cylinder)
+# Anti-collision: brim top = 9.15 + 0.15 = 9.3, hat h=2.5 so center at 9.3 + 1.25 = 10.55
+cy 0,10.55,0 0,1,0 2 2.5 30,30,30
+
+# Nose (small cone pointing forward)
+co 0,8,-1.0 0,0,-1 0.6 1.5 255,140,0
+
+# Left eye
+sp -0.4,8.5,-0.8 0.25 20,20,20
+
+# Right eye
+sp 0.4,8.5,-0.8 0.25 20,20,20
+
+# Buttons on middle body
+sp 0,6.2,-1.3 0.25 20,20,20
+sp 0,5.5,-1.4 0.25 20,20,20
+sp 0,4.8,-1.3 0.25 20,20,20
